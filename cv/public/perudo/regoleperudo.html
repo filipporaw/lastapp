@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Regole di Perudo</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-top">
+        <h1><a href="../index.html">filippo---raw</a></h1>
+        <div class="switch-wrapper">
+          <label class="switch">
+            <input type="checkbox" id="dark-toggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <p><a href="index.html">← Torna al Gioco</a></p>
+
+      <article>
+        <h2>Regole del gioco: Perudo</h2>
+
+        <h4>Preparazione del gioco</h4>
+        <p>Per stabilire chi inizia ogni giocatore tira un dado: inizia chi ottiene il numero più alto.</p>
+
+        <h4>Come si gioca</h4>
+        <p>Tutti i giocatori lanciano i propri dadi (5), si guarda segretamente il proprio risultato e lo si mantiene nascosto agli altri giocatori.</p>
+        <p>I dadi vanno da 1 a 6. Il valore 1 è chiamato jolly/asso e ha delle caratteristihe speciali.</p>
+
+        <h4>Le scommesse</h4>
+        <p>Chi inizia sceglie un numero (es. "quattro 3") come scommessa: significa che in totale ci sono almeno quattro dadi col numero 3 (i Jolly contano come qualunque valore, quindi verranno conteggiati).</p>
+
+        <h4>Le opzioni del turno successivo</h4>
+        <ul>
+          <li><strong>Rilanciare:</strong> aumentando il numero (es. cinque 3), passare a un numero più alto ( es. quattro 5), dimezzare con gli assi per eccesso (2 assi/jolly)</li>
+          <li><strong>Dichiarare Perudo:</strong> dubitando della scommessa fatta.</li>
+
+          <li><strong>Rilanciare sugli assi:</strong> nel caso la scommessa precedente sia relativa agli assi (es. 2 Assi), il rilancio potrà essere o 3 assi oppure il doppio +1 di un qualunque valore (es. 2x2+1 = cinque 4).</li>
+        </ul>
+
+        <h4>Perudo</h4>
+        <p>Se qualcuno chiama "Perudo", tutti rivelano i propri dadi. Se la scommessa è vera (cioè ci sono abbastanza dadi con quel numero o jolly), chi ha chiamato perudo perde un dado. Altrimenti, lo perde chi ha scommesso.</p>
+
+        <h4>Perdere dadi</h4>
+        <p>Chi perde l’ultimo dado è eliminato dal gioco.</p>
+
+        <h4>Valore 1</h4>
+        <p>I dadi 1 valgono come jolly, tranne nei turni Palifico.</p>
+
+        <h4>Palifico</h4>
+        <p>Chi ha solo un dado deve dichiararsi “Palifico”. In questo turno nessuno può cambiare il numero della scommessa, solo il quantitativo. Le Teste di Azteco non contano come jolly, ma solamente come 1.</p>
+
+        <h4>Calza</h4>
+        <p>Un giocatore (tranne chi è di turno) può dire “Calza” se pensa che l’ultima scommessa sia esatta. Se ha ragione, recupera un dado. Se sbaglia, ne perde uno. Si può avere al massimo 5 dadi.</p>
+
+        <h4>Condizioni di vittoria</h4>
+        <p>Vince l’ultimo giocatore rimasto con almeno un dado.</p>
+
+      </article>
+    </main>
+
+    <footer>
+      <p>--- 2025 ---</p>
+      <p>rawfilippo@gmail.com</p>
+    </footer>
+  </div>
+
+  <script>
+    // Dark mode toggle
+    const darkToggle = document.getElementById('dark-toggle');
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.body.classList.add('dark-mode');
+      darkToggle.checked = true;
+    }
+    darkToggle.addEventListener('change', () => {
+      if (darkToggle.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
+      } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
+      }
+    });
+  </script>
+</body>
+</html>

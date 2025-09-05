@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perudo Rules</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-top">
+        <h1><a href="../index.html">filippo---raw</a></h1>
+        <div class="switch-wrapper">
+          <label class="switch">
+            <input type="checkbox" id="dark-toggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <p><a href="index.html">← Back to the Game</a></p>
+
+      <article>
+        <h2>Perudo Game Rules</h2>
+
+        <h4>Game Setup</h4>
+        <p>To determine who starts, each player rolls one die. The highest number goes first.</p>
+
+        <h4>How to Play</h4>
+        <p>Each player rolls their 5 dice secretly and keeps their result hidden from the others.</p>
+        <p>Dice have values from 1 to 6. The value <strong>1</strong> is a <strong>wild/ace</strong> and has special properties.</p>
+
+        <h4>Bidding</h4>
+        <p>The starting player makes a bid, e.g. <em>"four 3s"</em>, meaning they believe there are at least four dice showing 3 across all players. <strong>Wilds (1s) count as any value</strong> and are included in the total.</p>
+
+        <h4>Options for the Next Player</h4>
+        <ul>
+          <li><strong>Raise:</strong> by increasing the quantity (e.g. five 3s), or choosing a higher face value (e.g. four 5s), or by halving and rounding up if switching to wilds (e.g. two 1s).</li>
+          <li><strong>Call Perudo:</strong> if they believe the previous bid is false.</li>
+          <li><strong>Raise from wilds:</strong> If the current bid is on wilds (e.g. two 1s), the next player may either increase to three 1s or bid a regular face with value = (wild quantity × 2) + 1 (e.g. five 4s).</li>
+        </ul>
+
+        <h4>Perudo</h4>
+        <p>If a player calls "Perudo", all players reveal their dice. If the bid was correct (enough dice match the face, counting wilds), the caller loses one die. If the bid was false, the bidder loses one die.</p>
+
+        <h4>Dice Loss</h4>
+        <p>Players who lose their last die are eliminated.</p>
+
+        <h4>Value of 1</h4>
+        <p>Dice showing <strong>1</strong> are wilds and can count as any face value — except during Palifico turns.</p>
+
+        <h4>Palifico Turn</h4>
+        <p>If a player has only one die left, they are “Palifico”. In this round:
+          <ul>
+            <li>The face value of the bid cannot change — only the quantity can.</li>
+            <li>Wilds (1s) are not wild: they count only as 1s.</li>
+          </ul>
+        </p>
+
+        <h4>Exact Bid (“Calza”)</h4>
+        <p>Any player (except the one who placed the bid) can call “Exact” if they believe the bid is exactly correct. If true, they regain one die (up to 5). If wrong, they lose one.</p>
+
+        <h4>Victory Conditions</h4>
+        <p>The last player with at least one die wins the game.</p>
+
+      </article>
+    </main>
+
+    <footer>
+      <p>--- 2025 ---</p>
+      <p>rawfilippo@gmail.com</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // Dark mode toggle
+    const darkToggle = document.getElementById('dark-toggle');
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.body.classList.add('dark-mode');
+      darkToggle.checked = true;
+    }
+    darkToggle.addEventListener('change', () => {
+      if (darkToggle.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
+      } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "builds": [
+    {
+      "src": "cv/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "trailingSlash": false
+}

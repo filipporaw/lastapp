@@ -1,0 +1,97 @@
+@import url("/fonts/fonts.css");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "CourierPrime", "Courier New", monospace;
+  }
+  
+  body {
+    font-family: "CourierPrime", "Courier New", monospace;
+    background-color: #f8f9fa;
+    color: #000000;
+    line-height: 1.6;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-black text-white outline-black inline-block rounded-none px-6 py-2 font-semibold shadow-none transition-all duration-300 border border-black;
+  }
+  .text-primary {
+    @apply text-black !important;
+  }
+  .bg-primary {
+    @apply bg-black text-white border border-black;
+  }
+  .outline-theme-purple {
+    @apply hover:bg-gray-800 hover:outline-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black transition-all duration-200;
+  }
+  .outline-theme-blue {
+    @apply hover:bg-gray-800 hover:outline-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black transition-all duration-200;
+  }
+  .within-outline-theme-purple {
+    @apply focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-black hover:bg-gray-800 hover:outline-gray-700 transition-all duration-200;
+  }
+  
+  /* Terminal-style elements */
+  .terminal-bg {
+    background-color: #ffffff;
+  }
+  
+  .terminal-text {
+    color: #000000;
+  }
+  
+  .terminal-border {
+    border: 1px solid #000000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Enhanced scrollbar styling */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #000000 #ffffff;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 3px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #000000;
+    border-radius: 3px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #333333;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Enhanced focus styles */
+  *:focus-visible {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+    border-radius: 0px;
+  }
+}
+
+:root {
+  --theme-purple: #000000;
+  --theme-blue: #000000;
+  /* Keep the below variable names in sync with CSS_VARIABLES in globals-css.ts */
+  --top-nav-bar-height: 3.5rem;
+  --resume-control-bar-height: 3rem;
+  --resume-padding: 1.5rem;
+}

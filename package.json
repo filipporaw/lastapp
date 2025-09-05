@@ -1,0 +1,13 @@
+{
+  "name": "filippo-blog",
+  "version": "1.0.0",
+  "description": "Personal blog with CV maker",
+  "private": true,
+  "scripts": {
+    "build": "cd cv && npm run build",
+    "dev": "cd cv && npm run dev"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

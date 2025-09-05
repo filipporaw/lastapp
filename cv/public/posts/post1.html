@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestione dei PDF</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-top">
+        <h1><a href="../index.html">filippo---raw</a></h1>
+        <div class="switch-wrapper">
+          <label class="switch">
+            <input type="checkbox" id="dark-toggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <p><a href="../index.html">← Torna alla home</a></p>
+
+      <article>
+        <h2>Gestire e manipolare PDF in modo privato e veloce</h2>
+        <p class="post-date">Pubblicato il 14 Luglio 2025</p>
+
+        <p>Spesso mi trovo a dover compiere operazioni su un file PDF. Ancora più spesso è qualche familiare a chiedermi una mano: convertire un formato diverso, unire pagine scansionate separatamente, o capire quale dei due PDF quasi identici contiene quelle piccole modifiche importanti.</p>
+<p>Sono tutte operazioni semplici, non c’è dubbio. Ma le soluzioni che conoscevo erano:</p>
+<ul>
+<li>A pagamento, come <strong>Adobe Acrobat</strong><a href="https://www.adobe.com/it/acrobat.html">^1</a>, e pagare un abbonamento per un uso occasionale mi è sempre sembrato uno spreco;</li>
+<li>Oppure gratuite, ma <strong>basate su servizi online</strong>, come <em>iLovePDF.com</em><a href="https://www.ilovepdf.com/">^2</a>, che richiedono: una connessione internet e soprattutto, <strong>il caricamento di documenti potenzialmente sensibili su server esterni</strong>.</li>
+</ul>
+<p>Per questi motivi ho iniziato a utilizzare un&#39;alternativa diversa: qualcosa di gratuito, utilizzabile <strong>offline</strong> e che rispettasse la <strong>privacy dei miei file</strong>.
+</p>
+<hr>
+<h4>Cos&#39;è StirlingPDF e quali vantaggi</h4>
+<p><strong>StirlingPDF</strong><a href="https://www.stirlingpdf.com/">^3</a> è un software open source, leggero e multipiattaforma (Linux, Win, MacOS) che ci permette di lavorare agilmente sui file PDF, praticamente compiendo ogni azione.
+Lo riassumerei come un coltellino svizzero per i PDF, comodo e sicuro. <br>
+<strong>Comodo</strong> perchè è semplicissimo da installare, seguendo la guida<a href="https://www.stirlingpdf.com/downloads">^4</a> è un attimo, io lo hosto su un server personale casalingo<a href="/posts/post0.html">^5
+</a> (questo permette all&#39;interno della casa di essere utilizzato da qualunque dispositivo connesso alla mia rete WI-Fi rapidamenete, solo digitando l&#39;ip in un qualunque browser, mentre se sono fuori casa utilizzo una VPN).
+<br></BRz><strong>Sicuro</strong> perchè il software lavora in locale, non ha connessioni con l&#39;esterno, <strong>i nostri dati rimangono di nostro possesso.</strong></p>
+<hr>
+<h4>Cosa puoi fare con StirlingPDF</h4>
+<p>All&#39;apertura si presenta così, una schermata ben definita con tutte le azioni che ci permette di fare.
+<img src="./img/imgpost1.webp" alt="Schermata di pdf-stirling" />
+Ecco alcune delle funzionalità che ho trovato più utili:</p>
+<ul>
+<li><p><strong>Unisci PDF</strong><br> Unisce più documenti in un unico file, utile per creare fascicoli, unire capitoli o scansioni.</p>
+</li>
+<li><p><strong>Dividi PDF</strong><br> Permette di spezzare un file PDF in più parti, ideale per inviare solo le pagine necessarie.</p>
+</li>
+<li><p><strong>Estrai immagini / pagine / contenuti</strong><br> Permette di recuperare parti del documento senza modificarne il resto.</p>
+</li>
+<li><p><strong>Converti da PDF a Word / testo / immagine / HTML</strong><br> Estrae il contenuto del PDF in vari formati editabili, ottimo per modifiche o riutilizzo.</p>
+</li>
+<li><p><strong>OCR / Pulisci scansioni</strong><br> Rende selezionabile il testo in documenti scansionati, migliorando leggibilità e ricerca.</p>
+</li>
+<li><p><strong>Appiattisci moduli PDF</strong><br> Converte i campi interattivi in contenuto statico, utile per archiviazione o invio definitivo.</p>
+</li>
+<li><p><strong>Aggiungi o rimuovi password</strong><br> Protegge o sblocca PDF con un clic, senza bisogno di software esterni.</p>
+</li>
+<li><p><strong>Comparazione tra PDF</strong><br> Evidenzia automaticamente le differenze tra due file simili (versioni di contratto, bozze, ecc.).</p>
+</li>
+<li><p><strong>Comprimi</strong><br> Riduce le dimensioni del PDF, ottimo per mandare mail più leggere.</p>
+</li>
+</ul>
+<hr>
+<h4>Privacy: davvero sotto controllo</h4>
+<p>Una delle cose che apprezzo di più è il modello <strong>privacy-first</strong> di StirlingPDF. Non ci sono server esterni coinvolti, né invii automatici di dati.<br>Tutto il codice è pubblico: se hai competenze tecniche, puoi anche verificare cosa fa il programma riga per riga.</p>
+<p>Questo approccio riduce al minimo i rischi di <em>data leak</em>, tracciamento o compromissione dei documenti, ed è particolarmente interessante per chi lavora con materiali riservati (legali, sanitari, personali).</p>
+<hr>
+<h4>Una scelta semplice, ma intelligente</h4>
+<p>Utilizzare strumenti leggeri come StirlingPDF migliora anche la produttività quotidiana.<br>Non devi caricare nulla, aspettare elaborazioni online o fare login su portali pieni di pubblicità. Apri il programma, trascini i tuoi file e lavori.</p>
+<p>Probabilmente non è l’unico strumento open source per gestire PDF, ma è uno dei più semplici e diretti.
+<a href="https://www.stirlingpdf.com/downloads">Link al sito ufficiale</a></p>
+
+      </article>
+    </main>
+
+    <footer>
+      <p>--- 2025 ---</p>
+      <p>rawfilippo@gmail.com</p>
+    </footer>
+  </div>
+
+  <script>
+    // Toggle dark mode
+    const darkToggle = document.getElementById('dark-toggle');
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.body.classList.add('dark-mode');
+      darkToggle.checked = true;
+    }
+
+    darkToggle.addEventListener('change', () => {
+      if (darkToggle.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
+      } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
+      }
+    });
+  </script>
+</body>
+</html>
