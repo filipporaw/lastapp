@@ -1,6 +1,5 @@
 import "globals.css";
 import { TopNavBar } from "components/TopNavBar";
-import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
   title: "cv---maker",
@@ -18,7 +17,6 @@ export default function RootLayout({
       <body>
         <TopNavBar />
         {children}
-        <Analytics />
       </body>
     </html>
   );
