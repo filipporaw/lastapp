@@ -1,15 +1,3 @@
 {
-  "builds": [
-    {
-      "src": "cv/package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
-    }
-  ],
   "trailingSlash": false
 }
