@@ -512,7 +512,7 @@ export const extractCustom = (sections: ResumeSectionToLines) => {
   
   if (customLines.length === 0) {
     // Look for sections that might contain custom content
-    const standardSections = ['profile', 'work', 'experience', 'employment', 'education', 'skills', 'projects'];
+    const standardSections = ['profile', 'work', 'experience', 'employment', 'education', 'skills', 'projects', 'objective', 'summary'];
     const allSectionNames = Object.keys(sections);
     
     const potentialCustomSections = allSectionNames.filter(sectionName => 

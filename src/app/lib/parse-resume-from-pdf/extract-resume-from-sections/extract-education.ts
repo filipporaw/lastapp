@@ -169,15 +169,15 @@ const matchGrade = (item: TextItem) => {
 
 const SCHOOL_FEATURE_SETS: FeatureSet[] = [
   [hasSchool, 4],
-  [hasDegree, -3], // Ridotto da -4 a -3 per essere meno restrittivo
-  [hasNumber, -2], // Ridotto da -3 a -2
-  [hasComma, -1], // Ridotto da -2 a -1
+  [hasDegree, -4], // Ripristinato a -4 per evitare sovrapposizioni
+  [hasNumber, -3], // Ripristinato a -3
+  [hasComma, -2], // Ripristinato a -2
 ];
 
 const DEGREE_FEATURE_SETS: FeatureSet[] = [
   [hasDegree, 4],
-  [hasSchool, -3], // Ridotto da -4 a -3 per essere meno restrittivo
-  [hasNumber, -1], // Ridotto da -2 a -1
+  [hasSchool, -4], // Ripristinato a -4 per evitare sovrapposizioni
+  [hasNumber, -2], // Ripristinato a -2
   [hasComma, -1],
 ];
 
@@ -196,12 +196,9 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
   const lines = getSectionLinesByKeywords(sections, ["education"]);
   const subsections = divideSectionIntoSubsections(lines);
   
-  console.log('Education lines found:', lines.map(line => line.map(item => item.text).join(' ')));
-  console.log('Education subsections:', subsections.length);
   
   for (const subsectionLines of subsections) {
     const textItems = subsectionLines.flat();
-    console.log('Processing education subsection:', textItems.map(item => item.text));
     
     // Estrai prima la data per escluderla dagli altri campi
     const [date, dateScores] = getTextWithHighestFeatureScore(
@@ -219,17 +216,19 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
       SCHOOL_FEATURE_SETS
     );
     
-    console.log('School extraction:', { school, schoolScores, nonDateItems: nonDateItems.map(item => item.text) });
+    // Escludi il testo già estratto come school per evitare sovrapposizioni
+    const nonSchoolItems = nonDateItems.filter(item => item.text.trim() !== school?.trim());
     
     const [degree, degreeScores] = getTextWithHighestFeatureScore(
-      nonDateItems,
+      nonSchoolItems,
       DEGREE_FEATURE_SETS
     );
     
-    console.log('Degree extraction:', { degree, degreeScores, nonDateItems: nonDateItems.map(item => item.text) });
+    // Escludi il testo già estratto come degree per evitare sovrapposizioni
+    const nonDegreeItems = nonSchoolItems.filter(item => item.text.trim() !== degree?.trim());
     
     const [gpa, gpaScores] = getTextWithHighestFeatureScore(
-      nonDateItems,
+      nonDegreeItems,
       GPA_FEATURE_SETS
     );
 
@@ -241,15 +240,8 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
       const isValidGPA = matchGPA({ text: gpaText } as TextItem) || matchGrade({ text: gpaText } as TextItem);
       if (isValidGPA) {
         validGPA = gpaText;
-        console.log('Valid GPA found:', validGPA);
-      } else {
-        console.log('Invalid GPA rejected:', gpaText);
       }
-    } else {
-      console.log('No GPA found in education section');
     }
-
-    console.log('Extracted education:', { school, degree, gpa: validGPA, date });
 
     let descriptions: string[] = [];
     const descriptionsLineIdx = getDescriptionsLineIdx(subsectionLines);

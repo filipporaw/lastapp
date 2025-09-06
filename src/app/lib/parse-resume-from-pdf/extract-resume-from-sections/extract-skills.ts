@@ -135,8 +135,6 @@ const parseFeaturedSkills = (textItems: TextItem[]): FeaturedSkill[] => {
   const featuredSkills = deepClone(initialFeaturedSkills);
   let skillIndex = 0;
   
-  console.log('Parsing featured skills from text items:', textItems.map(item => item.text));
-  
   for (let i = 0; i < textItems.length && skillIndex < 6; i++) {
     const textItem = textItems[i];
     const text = textItem.text.trim();
@@ -152,10 +150,9 @@ const parseFeaturedSkills = (textItems: TextItem[]): FeaturedSkill[] => {
         const skillName = extractSkillName(skillPart);
         
         if (skillName) { // Solo se c'è un nome di skill valido
-          console.log(`Skill: "${skillName}", Rating: ${rating}, Original: "${skillPart}"`);
           featuredSkills[skillIndex] = {
             skill: skillName,
-            rating: rating !== null ? rating : 0, // Default rating 0 se non trovato (non inventare)
+            rating: rating !== null ? rating : 3, // Default rating 3 come nell'originale
           };
           skillIndex++;
         }
@@ -168,22 +165,19 @@ const parseFeaturedSkills = (textItems: TextItem[]): FeaturedSkill[] => {
 
 export const extractSkills = (sections: ResumeSectionToLines) => {
   const lines = getSectionLinesByKeywords(sections, ["skill"]);
-  console.log('Skills lines found:', lines.map(line => line.map(item => item.text).join(' ')));
-  
   const descriptionsLineIdx = getDescriptionsLineIdx(lines) ?? 0;
   const descriptionsLines = lines.slice(descriptionsLineIdx);
   const descriptions = getBulletPointsFromLines(descriptionsLines);
 
   let featuredSkills = deepClone(initialFeaturedSkills);
   
-  // Processa tutte le righe delle skills, non solo quelle prima di descriptionsLineIdx
-  if (lines.length > 0) {
-    const allSkillsTextItems = lines
+  if (descriptionsLineIdx !== 0) {
+    const featuredSkillsLines = lines.slice(0, descriptionsLineIdx);
+    const featuredSkillsTextItems = featuredSkillsLines
       .flat()
-      .filter((item) => item.text.trim() !== "");
+      .filter((item) => item.text.trim());
     
-    console.log('All skills text items:', allSkillsTextItems.map(item => item.text));
-    featuredSkills = parseFeaturedSkills(allSkillsTextItems);
+    featuredSkills = parseFeaturedSkills(featuredSkillsTextItems);
   }
 
   const skills: ResumeSkills = {
