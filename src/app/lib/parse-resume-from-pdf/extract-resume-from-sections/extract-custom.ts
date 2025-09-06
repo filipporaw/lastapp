@@ -667,12 +667,12 @@ export const extractCustom = (sections: ResumeSectionToLines) => {
     lines: allCustomLines.map(line => line.map(item => item.text))
   });
   
-  const descriptionsLineIdx = getDescriptionsLineIdx(allCustomLines) ?? 0;
-  const descriptionsLines = allCustomLines.slice(descriptionsLineIdx);
+  // Per le sezioni custom, prendiamo tutte le righe tranne quelle che sono chiaramente statement/privacy
+  // Non usiamo getDescriptionsLineIdx perché potrebbe saltare righe importanti
+  const descriptionsLines = allCustomLines;
   const descriptions = getBulletPointsFromLines(descriptionsLines);
 
   console.log('🎯 Custom section parsing result:', {
-    descriptionsLineIdx,
     descriptionsCount: descriptions.length,
     descriptions: descriptions
   });
