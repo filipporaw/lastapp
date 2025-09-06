@@ -25,7 +25,6 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'publications',
   'references',
   'portfolio',
-  'projects',
   'activities',
   'summary',
   'profile',
@@ -34,7 +33,6 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'information',
   'details',
   'background',
-  'experience',
   'qualifications',
   'competencies',
   'expertise',
@@ -75,7 +73,6 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'delivery',
   'results',
   'performance',
-  'achievements',
   'accomplishments',
   'milestones',
   'successes',
@@ -93,7 +90,6 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'testimonials',
   'recommendations',
   'endorsements',
-  'references',
   'contacts',
   'networks',
   'connections',
@@ -137,8 +133,6 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'experts',
   'professionals',
   'practitioners',
-  'consultants',
-  'advisors',
   'strategists',
   'planners',
   'coordinators',
@@ -157,19 +151,10 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'inspectors',
   'examiners',
   'investigators',
-  'researchers',
-  'analysts',
-  'scientists',
-  'engineers',
   'technicians',
   'operators',
   'administrators',
-  'coordinators',
-  'managers',
   'supervisors',
-  'leaders',
-  'directors',
-  'executives',
   'presidents',
   'ceos',
   'founders',
@@ -177,29 +162,19 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'entrepreneurs',
   'innovators',
   'creators',
-  'designers',
   'artists',
   'musicians',
-  'writers',
   'authors',
   'journalists',
   'photographers',
   'videographers',
   'producers',
-  'directors',
   'actors',
   'performers',
   'entertainers',
   'athletes',
-  'coaches',
-  'trainers',
-  'instructors',
-  'teachers',
   'educators',
-  'professors',
   'lecturers',
-  'researchers',
-  'scientists',
   'doctors',
   'nurses',
   'therapists',
@@ -328,7 +303,6 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'property',
   'asset',
   'liability',
-  'equity',
   'revenue',
   'income',
   'profit',
@@ -346,7 +320,6 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'completion',
   'success',
   'achievement',
-  'accomplishment',
   'milestone',
   'goal',
   'objective',
@@ -395,10 +368,7 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'intelligence',
   'data',
   'information',
-  'knowledge',
   'wisdom',
-  'expertise',
-  'experience',
   'skills',
   'abilities',
   'talents',
@@ -435,8 +405,6 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'communities',
   'societies',
   'clubs',
-  'groups',
-  'teams',
   'squads',
   'crews',
   'staff',
@@ -504,16 +472,31 @@ const isCustomSectionTitle = (line: TextItem[]): boolean => {
 };
 
 export const extractCustom = (sections: ResumeSectionToLines) => {
+  console.log('🎯 Custom section parsing started:', {
+    sections: Object.keys(sections),
+    totalSections: Object.keys(sections).length
+  });
+
   // Try to find custom sections using various keywords
   const customLines = getSectionLinesByKeywords(sections, CUSTOM_KEYWORDS_LOWERCASE);
+  
+  console.log('🎯 Custom lines found by keywords:', {
+    customLinesCount: customLines.length,
+    customLines: customLines.map(line => line.map(item => item.text))
+  });
   
   // If no custom sections found, try to look for sections that don't match standard resume sections
   let allCustomLines = customLines;
   
   if (customLines.length === 0) {
+    console.log('🎯 No custom lines found by keywords, looking for non-standard sections...');
+    
     // Look for sections that might contain custom content
     const standardSections = ['profile', 'work', 'experience', 'employment', 'education', 'skills', 'projects', 'objective', 'summary'];
     const allSectionNames = Object.keys(sections);
+    
+    console.log('🎯 All section names:', allSectionNames);
+    console.log('🎯 Standard sections to exclude:', standardSections);
     
     const potentialCustomSections = allSectionNames.filter(sectionName => 
       !standardSections.some(standard => 
@@ -521,22 +504,38 @@ export const extractCustom = (sections: ResumeSectionToLines) => {
       )
     );
     
+    console.log('🎯 Potential custom sections:', potentialCustomSections);
+    
     // Get lines from potential custom sections
     for (const sectionName of potentialCustomSections) {
       const sectionLines = sections[sectionName];
       if (sectionLines && sectionLines.length > 0) {
+        console.log(`🎯 Adding lines from section "${sectionName}":`, sectionLines.map(line => line.map(item => item.text)));
         allCustomLines = [...allCustomLines, ...sectionLines];
       }
     }
   }
   
+  console.log('🎯 Total custom lines to process:', {
+    totalLines: allCustomLines.length,
+    lines: allCustomLines.map(line => line.map(item => item.text))
+  });
+  
   const descriptionsLineIdx = getDescriptionsLineIdx(allCustomLines) ?? 0;
   const descriptionsLines = allCustomLines.slice(descriptionsLineIdx);
   const descriptions = getBulletPointsFromLines(descriptionsLines);
 
+  console.log('🎯 Custom section parsing result:', {
+    descriptionsLineIdx,
+    descriptionsCount: descriptions.length,
+    descriptions: descriptions
+  });
+
   const custom: ResumeCustom = {
     descriptions,
   };
+
+  console.log('🎯 Final custom section:', custom);
 
   return { custom };
 };
