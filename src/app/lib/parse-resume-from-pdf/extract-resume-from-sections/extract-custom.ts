@@ -7,6 +7,32 @@ import {
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/bullet-points";
 import { isBold, hasLetterAndIsAllUpperCase } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
 
+// Funzione per calcolare la similarità tra due testi
+function calculateTextSimilarity(text1: string, text2: string): number {
+  if (!text1 || !text2) return 0;
+  
+  // Normalizza i testi: rimuovi spazi extra, punteggiatura, converte in lowercase
+  const normalize = (text: string) => text
+    .toLowerCase()
+    .replace(/[^\w\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  
+  const normalized1 = normalize(text1);
+  const normalized2 = normalize(text2);
+  
+  if (normalized1 === normalized2) return 1;
+  
+  // Calcola la similarità usando Jaccard similarity
+  const words1 = new Set(normalized1.split(' '));
+  const words2 = new Set(normalized2.split(' '));
+  
+  const intersection = new Set([...words1].filter(word => words2.has(word)));
+  const union = new Set([...words1, ...words2]);
+  
+  return intersection.size / union.size;
+}
+
 // Keywords that might indicate custom sections
 const CUSTOM_KEYWORDS_LOWERCASE = [
   'custom',
@@ -524,10 +550,38 @@ export const extractCustom = (sections: ResumeSectionToLines) => {
   
   // Estrai solo il contenuto delle sezioni custom identificate
   let filteredCustomLines: TextItem[][] = [];
+  
+  // Ottieni il contenuto del summary/profilo per confronto
+  const profileSummaryContent = (sections['profile'] || sections['summary'] || [])
+    .flat()
+    .map(item => item.text.toLowerCase())
+    .join(' ');
+  
+  console.log('🎯 Profile/Summary content for comparison:', profileSummaryContent.substring(0, 100) + '...');
+  
   for (const sectionName of customSectionNames) {
     if (sections[sectionName]) {
-      filteredCustomLines = filteredCustomLines.concat(sections[sectionName]);
-      console.log(`🎯 Adding content from custom section "${sectionName}":`, sections[sectionName].map(line => line.map(item => item.text)));
+      const sectionContent = sections[sectionName]
+        .flat()
+        .map(item => item.text.toLowerCase())
+        .join(' ');
+      
+      // Verifica se il contenuto della sezione custom è troppo simile al summary/profilo
+      const similarityThreshold = 0.7; // 70% di similarità
+      const similarity = calculateTextSimilarity(sectionContent, profileSummaryContent);
+      
+      console.log(`🎯 Checking section "${sectionName}" similarity with profile:`, {
+        similarity: similarity.toFixed(2),
+        threshold: similarityThreshold,
+        sectionContent: sectionContent.substring(0, 100) + '...'
+      });
+      
+      if (similarity < similarityThreshold) {
+        filteredCustomLines = filteredCustomLines.concat(sections[sectionName]);
+        console.log(`🎯 ✅ Adding content from custom section "${sectionName}" (similarity: ${similarity.toFixed(2)})`);
+      } else {
+        console.log(`🎯 ❌ Skipping section "${sectionName}" (too similar to profile: ${similarity.toFixed(2)})`);
+      }
     }
   }
   
