@@ -69,6 +69,7 @@ const hasSchool = (item: TextItem) => {
   // Escludi esplicitamente i gradi per evitare confusione
   const isDegree = DEGREES.some((degree) => text.toLowerCase().includes(degree.toLowerCase()));
   if (isDegree) {
+    console.log('🚫 School excluded (contains degree keyword):', text, 'matched degree:', DEGREES.find(degree => text.toLowerCase().includes(degree.toLowerCase())));
     return false; // Non è una scuola se contiene keywords di gradi
   }
   
