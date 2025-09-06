@@ -27,10 +27,18 @@ function calculateTextSimilarity(text1: string, text2: string): number {
   const words1 = new Set(normalized1.split(' '));
   const words2 = new Set(normalized2.split(' '));
   
-  const intersection = new Set([...words1].filter(word => words2.has(word)));
-  const union = new Set([...words1, ...words2]);
+  // Calcola intersection senza spread operator
+  let intersectionCount = 0;
+  words1.forEach(word => {
+    if (words2.has(word)) {
+      intersectionCount++;
+    }
+  });
   
-  return intersection.size / union.size;
+  // Calcola union senza spread operator
+  const unionCount = words1.size + words2.size - intersectionCount;
+  
+  return intersectionCount / unionCount;
 }
 
 // Keywords that might indicate custom sections
