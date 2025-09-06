@@ -19,6 +19,8 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'hobbies',
   'achievements',
   'certifications',
+  'certificate',
+  'certified',
   'languages',
   'volunteer',
   'awards',
@@ -492,7 +494,8 @@ export const extractCustom = (sections: ResumeSectionToLines) => {
     console.log('🎯 No custom lines found by keywords, looking for non-standard sections...');
     
     // Look for sections that might contain custom content
-    const standardSections = ['profile', 'work', 'experience', 'employment', 'education', 'skills', 'projects', 'objective', 'summary'];
+    // Rimuoviamo 'summary' dalle sezioni standard perché potrebbe essere una sezione custom
+    const standardSections = ['profile', 'work', 'experience', 'employment', 'education', 'skills', 'projects', 'objective'];
     const allSectionNames = Object.keys(sections);
     
     console.log('🎯 All section names:', allSectionNames);
