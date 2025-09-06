@@ -40,16 +40,6 @@ const getIframeInitialContent = (isA4: boolean) => {
     ${allFontFamiliesPreloadLinks}
     <style>
       ${allFontFamiliesFontFaces}
-      
-      /* Debug: Log font loading */
-      body {
-        font-family: "Roboto", sans-serif;
-      }
-      
-      /* Ensure fonts are loaded before rendering */
-      * {
-        font-display: swap;
-      }
     </style>
   </head>
   <body style='overflow: hidden; width: ${width}pt; margin: 0; padding: 0; -webkit-text-size-adjust:none;'>

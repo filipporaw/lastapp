@@ -23,8 +23,6 @@ export const ResumePDFMinimal = ({
   const { name } = profile;
   const { formToHeading, showBulletPoints, documentSize, fontFamily, fontSize, privacyStatements } =
     settings;
-    
-  console.log('ResumePDFMinimal - fontFamily:', fontFamily, 'fontSize:', fontSize);
 
   const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
     workExperiences: () => (
