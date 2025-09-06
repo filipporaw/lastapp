@@ -504,10 +504,45 @@ export const extractCustom = (sections: ResumeSectionToLines) => {
     }
   }
   
-  // If no custom sections found, try to look for sections that don't match standard resume sections
-  let allCustomLines = customLines;
+  // Filtra solo le sezioni che sono chiaramente custom (non standard resume sections)
+  const customSectionNames = Object.keys(sections).filter(sectionName => {
+    const lowerSectionName = sectionName.toLowerCase();
+    // Escludi sezioni standard del CV
+    const isStandardSection = ['profile', 'work experience', 'education', 'skills', 'projects', 'objective', 'summary'].some(standard => 
+      lowerSectionName.includes(standard)
+    );
+    
+    // Includi solo sezioni che contengono keywords custom e non sono standard
+    const hasCustomKeywords = CUSTOM_KEYWORDS_LOWERCASE.some(keyword => 
+      lowerSectionName.includes(keyword.toLowerCase())
+    );
+    
+    return !isStandardSection && hasCustomKeywords;
+  });
   
-  if (customLines.length === 0) {
+  console.log('🎯 Custom section names found:', customSectionNames);
+  
+  // Estrai solo il contenuto delle sezioni custom identificate
+  let filteredCustomLines: TextItem[][] = [];
+  for (const sectionName of customSectionNames) {
+    if (sections[sectionName]) {
+      filteredCustomLines = filteredCustomLines.concat(sections[sectionName]);
+      console.log(`🎯 Adding content from custom section "${sectionName}":`, sections[sectionName].map(line => line.map(item => item.text)));
+    }
+  }
+  
+  // Se non abbiamo trovato sezioni custom specifiche, usa il metodo originale
+  if (filteredCustomLines.length === 0) {
+    console.log('🎯 No specific custom sections found, using original method');
+    filteredCustomLines = customLines;
+  } else {
+    console.log('🎯 Using filtered custom sections content');
+  }
+  
+  // If no custom sections found, try to look for sections that don't match standard resume sections
+  let allCustomLines = filteredCustomLines;
+  
+  if (filteredCustomLines.length === 0) {
     console.log('🎯 No custom lines found by keywords, looking for non-standard sections...');
     
     // Look for sections that might contain custom content
