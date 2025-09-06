@@ -23,6 +23,8 @@ export const ResumePDFDefault = ({
   const { name } = profile;
   const { formToHeading, showBulletPoints, documentSize, fontFamily, fontSize, privacyStatements } =
     settings;
+    
+  console.log('ResumePDFDefault - fontFamily:', fontFamily, 'fontSize:', fontSize);
 
   const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
     workExperiences: () => (
@@ -73,7 +75,7 @@ export const ResumePDFDefault = ({
           style={{
             ...styles.flexCol,
             color: DEFAULT_FONT_COLOR,
-            fontFamily,
+            fontFamily: fontFamily || "Roboto", // Fallback to Roboto if fontFamily is not available
             fontSize: fontSize + "pt",
           }}
         >

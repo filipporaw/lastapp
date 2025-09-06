@@ -9,20 +9,32 @@ import { getAllFontFamiliesToLoad } from "components/fonts/lib";
 export const useRegisterReactPDFFont = () => {
   useEffect(() => {
     const allFontFamilies = getAllFontFamiliesToLoad();
-    allFontFamilies.forEach((fontFamily) => {
-      Font.register({
-        family: fontFamily,
-        fonts: [
-          {
-            src: `/fonts/${fontFamily}-Regular.ttf`,
-          },
-          {
-            src: `/fonts/${fontFamily}-Bold.ttf`,
-            fontWeight: "bold",
-          },
-        ],
-      });
-    });
+    console.log('Registering fonts for React PDF:', allFontFamilies);
+    
+    // Register fonts with a small delay to ensure they're loaded
+    const registerFonts = async () => {
+      for (const fontFamily of allFontFamilies) {
+        try {
+          await Font.register({
+            family: fontFamily,
+            fonts: [
+              {
+                src: `/fonts/${fontFamily}-Regular.ttf`,
+              },
+              {
+                src: `/fonts/${fontFamily}-Bold.ttf`,
+                fontWeight: "bold",
+              },
+            ],
+          });
+          console.log(`Font registered successfully: ${fontFamily}`);
+        } catch (error) {
+          console.error(`Failed to register font ${fontFamily}:`, error);
+        }
+      }
+    };
+    
+    registerFonts();
   }, []);
 };
 
