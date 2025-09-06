@@ -126,6 +126,12 @@ const matchGPA = (item: TextItem) => {
     /^[0-4]\.\d{1,2}\s*out\s*of\s*4\.0$/i, // GPA con "out of"
     /^GPA:\s*[0-4]\.\d{1,2}$/i, // GPA con etichetta
     /^Grade\s*Point\s*Average:\s*[0-4]\.\d{1,2}$/i, // GPA completo
+    // Pattern per GPA italiani (110/110, 30/30, etc.)
+    /^110\/110$/i, // Laurea italiana
+    /^30\/30$/i, // Esame italiano
+    /^110\s*e\s*Lode$/i, // Laurea con lode
+    /^30\s*e\s*Lode$/i, // Esame con lode
+    /^[0-9]{1,3}\/[0-9]{1,3}$/, // Pattern generico per voti italiani
   ];
   
   return gpaPatterns.some(pattern => pattern.test(item.text.trim()));
@@ -143,10 +149,16 @@ const matchGrade = (item: TextItem) => {
     /^GPA:\s*[0-4]\.\d{1,2}$/i, // GPA con etichetta
     /^Grade:\s*[0-4]\.\d{1,2}$/i, // Grade con etichetta
     /^[0-4]\.\d{1,2}\s*GPA$/i, // GPA alla fine
+    // Pattern per voti italiani
+    /^110\/110$/i, // Laurea italiana
+    /^30\/30$/i, // Esame italiano
+    /^110\s*e\s*Lode$/i, // Laurea con lode
+    /^30\s*e\s*Lode$/i, // Esame con lode
+    /^[0-9]{1,3}\/[0-9]{1,3}$/, // Pattern generico per voti italiani
   ];
   
   if (gradePatterns.some(pattern => pattern.test(text))) {
-    const match = text.match(/[0-4]\.\d{1,2}/);
+    const match = text.match(/[0-4]\.\d{1,2}|110\/110|30\/30|110\s*e\s*Lode|30\s*e\s*Lode|[0-9]{1,3}\/[0-9]{1,3}/i);
     if (match) {
       return match;
     }
@@ -170,12 +182,12 @@ const DEGREE_FEATURE_SETS: FeatureSet[] = [
 ];
 
 const GPA_FEATURE_SETS: FeatureSet[] = [
-  [matchGPA, 4, true],
-  [matchGrade, 3, true],
+  [matchGrade, 4, true], // Usa matchGrade che restituisce RegExpMatchArray | null
   [hasComma, -3],
   [hasLetter, -4],
   [hasSchool, -4], // Le scuole non dovrebbero essere GPA
   [hasDegree, -4], // I gradi non dovrebbero essere GPA
+  [hasNumber, -2], // Penalizza numeri generici (solo se non sono GPA validi)
 ];
 
 export const extractEducation = (sections: ResumeSectionToLines) => {
@@ -217,7 +229,23 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
       GPA_FEATURE_SETS
     );
 
-    console.log('Extracted education:', { school, degree, gpa, date });
+    // Controlla se il GPA estratto è realmente valido
+    let validGPA = "";
+    if (gpa && gpa.trim()) {
+      const gpaText = gpa.trim();
+      // Solo accetta GPA se corrisponde esattamente ai pattern validi
+      const isValidGPA = matchGPA({ text: gpaText } as TextItem) || matchGrade({ text: gpaText } as TextItem);
+      if (isValidGPA) {
+        validGPA = gpaText;
+        console.log('Valid GPA found:', validGPA);
+      } else {
+        console.log('Invalid GPA rejected:', gpaText);
+      }
+    } else {
+      console.log('No GPA found in education section');
+    }
+
+    console.log('Extracted education:', { school, degree, gpa: validGPA, date });
 
     let descriptions: string[] = [];
     const descriptionsLineIdx = getDescriptionsLineIdx(subsectionLines);
@@ -226,7 +254,7 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
       descriptions = getBulletPointsFromLines(descriptionsLines);
     }
 
-    educations.push({ school, degree, gpa, date, descriptions });
+    educations.push({ school, degree, gpa: validGPA, date, descriptions });
     educationsScores.push({
       schoolScores,
       degreeScores,
