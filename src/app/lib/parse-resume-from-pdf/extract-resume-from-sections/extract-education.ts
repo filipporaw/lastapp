@@ -97,7 +97,7 @@ const hasSchool = (item: TextItem) => {
     // Pattern per scuole con numeri (es. "University of California, Berkeley")
     /^[A-Z][a-zA-Z\s&.,-]*(?:College|University|Institute|School|Academy)[\s,]*[A-Z][a-zA-Z\s&.,-]*$/i,
     // Pattern per scuole con parentesi (es. "University of Pavia (Pavia, IT)")
-    /^[A-Z][a-zA-Z\s&.,-]+(?:College|University|Institute|School|Academy|Uni|Politecnico|Istituto|Accademia)[\s,]*\([^)]+\)$/i
+    /University.*\([^)]+\)/i
   ];
   
   const matchesPattern = schoolPatterns.some(pattern => pattern.test(text));
