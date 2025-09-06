@@ -122,7 +122,7 @@ export const ResumeDropzone = ({
   };
 
   const onImportClick = async () => {
-    let resume, settings;
+    let resume, settings, privacyStatements;
     if (file.name.endsWith(".json")) {
         const data = JSON.parse(await file.data!.text());
         if (!data.resume || !data.settings) {
@@ -131,26 +131,35 @@ export const ResumeDropzone = ({
         }
         resume = validateAndFixResume(data.resume);
         settings = data.settings;
+        privacyStatements = data.privacyStatements || { italyPrivacy: false, euPrivacy: false };
     } else {
-        resume = await parseResumeFromPdf(file.fileUrl);
-        resume = validateAndFixResume(resume);
+        const parseResult = await parseResumeFromPdf(file.fileUrl);
+        resume = validateAndFixResume(parseResult.resume);
+        privacyStatements = parseResult.privacyStatements;
         settings = deepClone(initialSettings);
     }
     
-
-    // Set formToShow settings based on uploaded resume if users have used the app before
-    if (getHasUsedAppBefore()) {
-      const sections = Object.keys(settings.formToShow) as ShowForm[];
-      const sectionToFormToShow: Record<ShowForm, boolean> = {
-        workExperiences: resume.workExperiences.length > 0,
-        educations: resume.educations.length > 0,
-        projects: resume.projects.length > 0,
-        skills: resume.skills.descriptions.length > 0,
-        custom: resume.custom.descriptions.length > 0,
-      };
-      for (const section of sections) {
-        settings.formToShow[section] = sectionToFormToShow[section];
+    // Set formToShow settings based on uploaded resume - always show sections that have data
+    const sections = Object.keys(settings.formToShow) as ShowForm[];
+    const sectionToFormToShow: Record<ShowForm, boolean> = {
+      workExperiences: resume.workExperiences.length > 0,
+      educations: resume.educations.length > 0,
+      projects: resume.projects.length > 0,
+      skills: resume.skills.descriptions.length > 0 || resume.skills.featuredSkills.some(skill => skill.skill.trim() !== ''),
+      custom: resume.custom.descriptions.length > 0,
+    };
+    
+    // Always show sections that have data, regardless of whether user has used app before
+    for (const section of sections) {
+      if (sectionToFormToShow[section]) {
+        settings.formToShow[section] = true;
       }
+    }
+
+    // Set privacy statements based on detected statements
+    if (privacyStatements) {
+      settings.privacyStatements.italyPrivacy = privacyStatements.italyPrivacy;
+      settings.privacyStatements.euPrivacy = privacyStatements.euPrivacy;
     }
 
     saveStateToLocalStorage({ resume, settings, coverLetter: initialCoverLetterState });
