@@ -70,6 +70,36 @@ const hasRatingPattern = (text: string): number | null => {
     return dotMatch[0].length;
   }
   
+  // Pattern 8: Numeri semplici alla fine (1, 2, 3, 4, 5)
+  const simpleNumberPattern = /^(\d)$/;
+  const simpleNumberMatch = text.match(simpleNumberPattern);
+  if (simpleNumberMatch) {
+    const num = parseInt(simpleNumberMatch[1]);
+    if (num >= 1 && num <= 5) {
+      return num;
+    }
+  }
+  
+  // Pattern 9: Testo con numeri tra parentesi (JavaScript (4), Python (5))
+  const parenthesesPattern = /\((\d)\)$/;
+  const parenthesesMatch = text.match(parenthesesPattern);
+  if (parenthesesMatch) {
+    const num = parseInt(parenthesesMatch[1]);
+    if (num >= 1 && num <= 5) {
+      return num;
+    }
+  }
+  
+  // Pattern 10: Testo con numeri dopo due punti (JavaScript: 4, Python: 5)
+  const colonPattern = /:\s*(\d)$/;
+  const colonMatch = text.match(colonPattern);
+  if (colonMatch) {
+    const num = parseInt(colonMatch[1]);
+    if (num >= 1 && num <= 5) {
+      return num;
+    }
+  }
+  
   return null;
 };
 
@@ -83,6 +113,9 @@ const extractSkillName = (text: string): string => {
     .replace(/(Expert|Advanced|Intermediate|Beginner|Novice)$/i, '') // Rimuove parole di livello
     .replace(/\|{1,5}$/, '') // Rimuove barre
     .replace(/\.{1,5}$/, '') // Rimuove punti
+    .replace(/^\d$/, '') // Rimuove numeri semplici
+    .replace(/\(\d\)$/, '') // Rimuove numeri tra parentesi
+    .replace(/:\s*\d$/, '') // Rimuove numeri dopo due punti
     .trim();
 };
 
@@ -107,7 +140,7 @@ const parseFeaturedSkills = (textItems: TextItem[]): FeaturedSkill[] => {
         if (skillName) { // Solo se c'è un nome di skill valido
           featuredSkills[skillIndex] = {
             skill: skillName,
-            rating: rating !== null ? rating : 3, // Default rating se non trovato
+            rating: rating !== null ? rating : 0, // Default rating 0 se non trovato (non inventare)
           };
           skillIndex++;
         }
