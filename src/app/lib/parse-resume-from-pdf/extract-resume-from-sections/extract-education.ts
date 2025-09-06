@@ -26,16 +26,89 @@ import {
  */
 
 // prettier-ignore
-const SCHOOLS = ['College', 'University', 'Institute', 'School', 'Academy', 'BASIS', 'Magnet', 'High School', 'Elementary', 'Middle School', 'Technical', 'Community College', 'State University', 'Private School', 'Public School', 'International School', 'Boarding School', 'Prep School', 'Grammar School', 'Primary School', 'Secondary School', 'Vocational School', 'Trade School', 'Art School', 'Music School', 'Dance School', 'Theater School', 'Film School', 'Design School', 'Business School', 'Law School', 'Medical School', 'Dental School', 'Nursing School', 'Engineering School', 'Architecture School', 'Agriculture School', 'Forestry School', 'Maritime School', 'Military School', 'Naval Academy', 'Air Force Academy', 'West Point', 'Annapolis', 'Coast Guard Academy', 'Merchant Marine Academy', 'Military Academy', 'Service Academy', 'War College', 'Staff College', 'Command College', 'Defense College', 'National Defense University', 'Naval War College', 'Army War College', 'Air War College', 'Marine Corps University', 'Joint Forces Staff College', 'National War College', 'Industrial College', 'Armed Forces Staff College', 'Joint Military Intelligence College', 'Defense Language Institute', 'Defense Acquisition University', 'Defense Systems Management College', 'Defense Institute of Security Assistance Management', 'Defense Equal Opportunity Management Institute', 'Defense Information School', 'Defense Media Activity', 'Defense Information Systems Agency', 'Defense Intelligence Agency', 'Defense Logistics Agency', 'Defense Contract Management Agency', 'Defense Finance and Accounting Service', 'Defense Health Agency', 'Defense Human Resources Activity', 'Defense Information Systems Agency', 'Defense Intelligence Agency', 'Defense Logistics Agency', 'Defense Contract Management Agency', 'Defense Finance and Accounting Service', 'Defense Health Agency', 'Defense Human Resources Activity'];
+const SCHOOLS = [
+  // English
+  'College', 'University', 'Institute', 'School', 'Academy', 'BASIS', 'Magnet', 
+  'High School', 'Elementary', 'Middle School', 'Technical', 'Community College', 
+  'State University', 'Private School', 'Public School', 'International School', 
+  'Boarding School', 'Prep School', 'Grammar School', 'Primary School', 
+  'Secondary School', 'Vocational School', 'Trade School', 'Art School', 
+  'Music School', 'Dance School', 'Theater School', 'Film School', 'Design School', 
+  'Business School', 'Law School', 'Medical School', 'Dental School', 'Nursing School', 
+  'Engineering School', 'Architecture School', 'Agriculture School', 'Forestry School', 
+  'Maritime School', 'Military School', 'Naval Academy', 'Air Force Academy', 
+  'West Point', 'Annapolis', 'Coast Guard Academy', 'Merchant Marine Academy', 
+  'Military Academy', 'Service Academy', 'War College', 'Staff College', 
+  'Command College', 'Defense College', 'National Defense University', 
+  'Naval War College', 'Army War College', 'Air War College', 'Marine Corps University', 
+  'Joint Forces Staff College', 'National War College', 'Industrial College', 
+  'Armed Forces Staff College', 'Joint Military Intelligence College', 
+  'Defense Language Institute', 'Defense Acquisition University', 
+  'Defense Systems Management College', 'Defense Institute of Security Assistance Management', 
+  'Defense Equal Opportunity Management Institute', 'Defense Information School', 
+  'Defense Media Activity', 'Defense Information Systems Agency', 'Defense Intelligence Agency', 
+  'Defense Logistics Agency', 'Defense Contract Management Agency', 
+  'Defense Finance and Accounting Service', 'Defense Health Agency', 
+  'Defense Human Resources Activity',
+  
+  // Italian
+  'Università', 'Universita', 'Uni', 'Politecnico', 'Istituto', 'Accademia', 
+  'Scuola', 'Liceo', 'Tecnico', 'Professionale', 'Superiore', 'Magistrale', 
+  'Specializzazione', 'Master', 'Dottorato', 'PhD', 'Laurea', 'Diploma', 
+  'Certificazione', 'Corso', 'Formazione', 'Educazione', 'Studi', 'Facoltà', 
+  'Dipartimento', 'Campus', 'Ateneo', 'Conservatorio', 'Accademia di Belle Arti',
+  
+  // Other languages
+  'Universidad', 'Université', 'Universität', 'Universiteit', 'Uniwersytet',
+  'Universidade', 'Universitet', 'Universitetet', 'Yliopisto', 'Egyetem'
+];
 
 const hasSchool = (item: TextItem) =>
   SCHOOLS.some((school) => item.text.toLowerCase().includes(school.toLowerCase())) ||
   // Pattern per riconoscere nomi di scuole comuni
   /^[A-Z][a-zA-Z\s&]+(?:College|University|Institute|School|Academy)$/i.test(item.text) ||
   // Pattern per scuole con "of" (es. "University of California")
-  /^[A-Z][a-zA-Z\s&]+of\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text);
+  /^[A-Z][a-zA-Z\s&]+of\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text) ||
+  // Pattern per scuole italiane con "degli Studi" (es. "Università degli Studi di Milano")
+  /^[A-Z][a-zA-Z\s&]+degli\s+Studi\s+di\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text) ||
+  // Pattern per scuole italiane con "di" (es. "Politecnico di Milano")
+  /^[A-Z][a-zA-Z\s&]+di\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text) ||
+  // Pattern per scuole italiane con "del" (es. "Istituto del Design")
+  /^[A-Z][a-zA-Z\s&]+del\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text) ||
+  // Pattern per scuole italiane con "della" (es. "Accademia della Moda")
+  /^[A-Z][a-zA-Z\s&]+della\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text) ||
+  // Pattern per scuole italiane con "delle" (es. "Scuola delle Arti")
+  /^[A-Z][a-zA-Z\s&]+delle\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text);
 // prettier-ignore
-const DEGREES = ["Associate", "Bachelor", "Master", "PhD", "Ph.", "Doctorate", "Doctor", "Diploma", "Certificate", "Certification", "License", "Licensure", "B.A.", "B.S.", "B.B.A.", "B.E.", "B.F.A.", "B.M.", "B.Arch", "B.Ed", "B.Sc", "M.A.", "M.S.", "M.B.A.", "M.E.", "M.F.A.", "M.M.", "M.Arch", "M.Ed", "M.Sc", "M.D.", "J.D.", "D.D.S.", "D.V.M.", "D.Pharm", "D.O.", "D.P.T.", "D.N.P.", "D.S.W.", "D.Min", "D.Div", "D.M.A.", "D.M.", "D.Mus", "D.Litt", "D.Sc", "D.Eng", "D.Arch", "D.A.", "D.B.A.", "D.P.A.", "D.P.H.", "D.P.S.", "D.R.E.", "D.S.", "D.Sci", "D.S.W.", "D.Tech", "D.U.", "D.V.M.", "D.W.", "D.X.", "D.Y.", "D.Z.", "A.A.", "A.S.", "A.A.S.", "A.F.A.", "A.O.S.", "A.G.S.", "A.T.", "A.E.", "A.B.", "A.M.", "A.D.", "A.D.N.", "A.D.A.", "A.D.T.", "A.D.E.", "A.D.F.", "A.D.G.", "A.D.H.", "A.D.I.", "A.D.J.", "A.D.K.", "A.D.L.", "A.D.M.", "A.D.N.", "A.D.O.", "A.D.P.", "A.D.Q.", "A.D.R.", "A.D.S.", "A.D.T.", "A.D.U.", "A.D.V.", "A.D.W.", "A.D.X.", "A.D.Y.", "A.D.Z."];
+const DEGREES = [
+  // English
+  "Associate", "Bachelor", "Master", "PhD", "Ph.", "Doctorate", "Doctor", 
+  "Diploma", "Certificate", "Certification", "License", "Licensure", 
+  "B.A.", "B.S.", "B.B.A.", "B.E.", "B.F.A.", "B.M.", "B.Arch", "B.Ed", "B.Sc", 
+  "M.A.", "M.S.", "M.B.A.", "M.E.", "M.F.A.", "M.M.", "M.Arch", "M.Ed", "M.Sc", 
+  "M.D.", "J.D.", "D.D.S.", "D.V.M.", "D.Pharm", "D.O.", "D.P.T.", "D.N.P.", 
+  "D.S.W.", "D.Min", "D.Div", "D.M.A.", "D.M.", "D.Mus", "D.Litt", "D.Sc", 
+  "D.Eng", "D.Arch", "D.A.", "D.B.A.", "D.P.A.", "D.P.H.", "D.P.S.", "D.R.E.", 
+  "D.S.", "D.Sci", "D.S.W.", "D.Tech", "D.U.", "D.V.M.", "D.W.", "D.X.", "D.Y.", "D.Z.", 
+  "A.A.", "A.S.", "A.A.S.", "A.F.A.", "A.O.S.", "A.G.S.", "A.T.", "A.E.", "A.B.", "A.M.", 
+  "A.D.", "A.D.N.", "A.D.A.", "A.D.T.", "A.D.E.", "A.D.F.", "A.D.G.", "A.D.H.", 
+  "A.D.I.", "A.D.J.", "A.D.K.", "A.D.L.", "A.D.M.", "A.D.N.", "A.D.O.", "A.D.P.", 
+  "A.D.Q.", "A.D.R.", "A.D.S.", "A.D.T.", "A.D.U.", "A.D.V.", "A.D.W.", "A.D.X.", "A.D.Y.", "A.D.Z.",
+  
+  // Italian
+  "Laurea", "Laurea Triennale", "Laurea Magistrale", "Laurea Specialistica", 
+  "Dottorato", "Dottorato di Ricerca", "Master", "Master Universitario", 
+  "Specializzazione", "Specializzazione Medica", "Specializzazione Veterinaria", 
+  "Diploma", "Diploma di Laurea", "Diploma Accademico", "Certificazione", 
+  "Attestato", "Abilitazione", "Esame di Stato", "Esame di Abilitazione", 
+  "Corso", "Corso di Laurea", "Corso di Specializzazione", "Corso di Perfezionamento", 
+  "Formazione", "Formazione Continua", "Aggiornamento Professionale", 
+  "Tirocinio", "Stage", "Tesi", "Tesi di Laurea", "Tesi di Dottorato", 
+  "Progetto", "Progetto di Laurea", "Progetto Finale", "Esame", "Esami", 
+  "Crediti", "Crediti Formativi", "CFU", "Voto", "Voto di Laurea", 
+  "Media", "Media Ponderata", "Lode", "Cum Laude", "Magna Cum Laude", 
+  "Summa Cum Laude", "110 e Lode", "110/110", "30 e Lode", "30/30"
+];
 
 const hasDegree = (item: TextItem) =>
   DEGREES.some((degree) => item.text.toLowerCase().includes(degree.toLowerCase())) ||
@@ -111,8 +184,12 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
   const lines = getSectionLinesByKeywords(sections, ["education"]);
   const subsections = divideSectionIntoSubsections(lines);
   
+  console.log('Education lines found:', lines.map(line => line.map(item => item.text).join(' ')));
+  console.log('Education subsections:', subsections.length);
+  
   for (const subsectionLines of subsections) {
     const textItems = subsectionLines.flat();
+    console.log('Processing education subsection:', textItems.map(item => item.text));
     
     // Estrai prima la data per escluderla dagli altri campi
     const [date, dateScores] = getTextWithHighestFeatureScore(
@@ -139,6 +216,8 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
       nonDateItems,
       GPA_FEATURE_SETS
     );
+
+    console.log('Extracted education:', { school, degree, gpa, date });
 
     let descriptions: string[] = [];
     const descriptionsLineIdx = getDescriptionsLineIdx(subsectionLines);
