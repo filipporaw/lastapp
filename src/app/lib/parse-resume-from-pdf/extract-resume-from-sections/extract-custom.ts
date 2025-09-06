@@ -487,6 +487,23 @@ export const extractCustom = (sections: ResumeSectionToLines) => {
     customLines: customLines.map(line => line.map(item => item.text))
   });
   
+  // Debug: mostra da quale sezione provengono le linee custom
+  if (customLines.length > 0) {
+    console.log('🎯 Debug: checking which sections contain custom keywords...');
+    for (const [sectionName, sectionLines] of Object.entries(sections)) {
+      const hasCustomContent = sectionLines.some(line => 
+        line.some(item => 
+          CUSTOM_KEYWORDS_LOWERCASE.some(keyword => 
+            item.text.toLowerCase().includes(keyword.toLowerCase())
+          )
+        )
+      );
+      if (hasCustomContent) {
+        console.log(`🎯 Section "${sectionName}" contains custom keywords:`, sectionLines.map(line => line.map(item => item.text)));
+      }
+    }
+  }
+  
   // If no custom sections found, try to look for sections that don't match standard resume sections
   let allCustomLines = customLines;
   
