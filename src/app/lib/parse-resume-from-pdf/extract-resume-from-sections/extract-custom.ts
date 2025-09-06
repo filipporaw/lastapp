@@ -601,10 +601,39 @@ export const extractCustom = (sections: ResumeSectionToLines) => {
     console.log('🎯 Using filtered custom sections content');
   }
   
-  // If no custom sections found, try to look for sections that don't match standard resume sections
-  let allCustomLines = filteredCustomLines;
+  // Filtra le righe che contengono statement/privacy text
+  const statementKeywords = [
+    'this cv and application',
+    'recruiting purposes',
+    'privacy',
+    'confidential',
+    'personal information',
+    'data protection',
+    'consent',
+    'authorization'
+  ];
   
-  if (filteredCustomLines.length === 0) {
+  const cleanedCustomLines = filteredCustomLines.filter(line => {
+    const lineText = line.map(item => item.text).join(' ').toLowerCase();
+    const hasStatement = statementKeywords.some(keyword => lineText.includes(keyword));
+    
+    if (hasStatement) {
+      console.log('🎯 Removing statement line:', line.map(item => item.text).join(' '));
+    }
+    
+    return !hasStatement;
+  });
+  
+  console.log('🎯 Cleaned custom lines (removed statements):', {
+    originalCount: filteredCustomLines.length,
+    cleanedCount: cleanedCustomLines.length,
+    removedCount: filteredCustomLines.length - cleanedCustomLines.length
+  });
+  
+  // If no custom sections found, try to look for sections that don't match standard resume sections
+  let allCustomLines = cleanedCustomLines;
+  
+  if (cleanedCustomLines.length === 0) {
     console.log('🎯 No custom lines found by keywords, looking for non-standard sections...');
     
     // Look for sections that might contain custom content

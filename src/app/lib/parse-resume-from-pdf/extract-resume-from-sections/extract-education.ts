@@ -106,19 +106,29 @@ const hasSchool = (item: TextItem) => {
   if (hasSchoolKeyword || matchesPattern) {
     console.log('🎓 School detected:', text, { hasSchoolKeyword, matchesPattern });
   } else {
-    // Debug specifico per "University of Pavia"
-    if (text.toLowerCase().includes('university') && text.toLowerCase().includes('pavia')) {
-      console.log('🔍 Debug University of Pavia:', {
-        text,
-        hasSchoolKeyword,
-        matchesPattern,
-        schoolPatterns: schoolPatterns.map((pattern, index) => ({
-          index,
-          pattern: pattern.toString(),
-          matches: pattern.test(text)
-        }))
-      });
-    }
+  // Debug specifico per "University of Pavia"
+  if (text.toLowerCase().includes('university') && text.toLowerCase().includes('pavia')) {
+    console.log('🔍 Debug University of Pavia:', {
+      text,
+      hasSchoolKeyword,
+      matchesPattern,
+      schoolPatterns: schoolPatterns.map((pattern, index) => ({
+        index,
+        pattern: pattern.toString(),
+        matches: pattern.test(text)
+      }))
+    });
+  }
+  
+  // Debug generale per tutti i testi che contengono "university"
+  if (text.toLowerCase().includes('university')) {
+    console.log('🔍 Debug any university:', {
+      text,
+      hasSchoolKeyword,
+      matchesPattern,
+      isDegree: DEGREES.some((degree) => text.toLowerCase().includes(degree.toLowerCase()))
+    });
+  }
   }
   
   return hasSchoolKeyword || matchesPattern;
