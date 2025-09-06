@@ -168,19 +168,22 @@ const parseFeaturedSkills = (textItems: TextItem[]): FeaturedSkill[] => {
 
 export const extractSkills = (sections: ResumeSectionToLines) => {
   const lines = getSectionLinesByKeywords(sections, ["skill"]);
+  console.log('Skills lines found:', lines.map(line => line.map(item => item.text).join(' ')));
+  
   const descriptionsLineIdx = getDescriptionsLineIdx(lines) ?? 0;
   const descriptionsLines = lines.slice(descriptionsLineIdx);
   const descriptions = getBulletPointsFromLines(descriptionsLines);
 
   let featuredSkills = deepClone(initialFeaturedSkills);
   
-  if (descriptionsLineIdx !== 0) {
-    const featuredSkillsLines = lines.slice(0, descriptionsLineIdx);
-    const featuredSkillsTextItems = featuredSkillsLines
+  // Processa tutte le righe delle skills, non solo quelle prima di descriptionsLineIdx
+  if (lines.length > 0) {
+    const allSkillsTextItems = lines
       .flat()
-      .filter((item) => item.text.trim());
+      .filter((item) => item.text.trim() !== "");
     
-    featuredSkills = parseFeaturedSkills(featuredSkillsTextItems);
+    console.log('All skills text items:', allSkillsTextItems.map(item => item.text));
+    featuredSkills = parseFeaturedSkills(allSkillsTextItems);
   }
 
   const skills: ResumeSkills = {

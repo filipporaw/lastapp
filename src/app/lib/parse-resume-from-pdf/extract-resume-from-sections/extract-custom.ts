@@ -28,7 +28,6 @@ const CUSTOM_KEYWORDS_LOWERCASE = [
   'projects',
   'activities',
   'summary',
-  'objective',
   'profile',
   'about',
   'contact',

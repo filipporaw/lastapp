@@ -169,15 +169,15 @@ const matchGrade = (item: TextItem) => {
 
 const SCHOOL_FEATURE_SETS: FeatureSet[] = [
   [hasSchool, 4],
-  [hasDegree, -4],
-  [hasNumber, -3],
-  [hasComma, -2], // Le date spesso hanno virgole
+  [hasDegree, -3], // Ridotto da -4 a -3 per essere meno restrittivo
+  [hasNumber, -2], // Ridotto da -3 a -2
+  [hasComma, -1], // Ridotto da -2 a -1
 ];
 
 const DEGREE_FEATURE_SETS: FeatureSet[] = [
   [hasDegree, 4],
-  [hasSchool, -4],
-  [hasNumber, -2], // GPA può avere numeri
+  [hasSchool, -3], // Ridotto da -4 a -3 per essere meno restrittivo
+  [hasNumber, -1], // Ridotto da -2 a -1
   [hasComma, -1],
 ];
 
@@ -219,10 +219,14 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
       SCHOOL_FEATURE_SETS
     );
     
+    console.log('School extraction:', { school, schoolScores, nonDateItems: nonDateItems.map(item => item.text) });
+    
     const [degree, degreeScores] = getTextWithHighestFeatureScore(
       nonDateItems,
       DEGREE_FEATURE_SETS
     );
+    
+    console.log('Degree extraction:', { degree, degreeScores, nonDateItems: nonDateItems.map(item => item.text) });
     
     const [gpa, gpaScores] = getTextWithHighestFeatureScore(
       nonDateItems,
