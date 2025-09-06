@@ -63,22 +63,43 @@ const SCHOOLS = [
   'Universidade', 'Universitet', 'Universitetet', 'Yliopisto', 'Egyetem'
 ];
 
-const hasSchool = (item: TextItem) =>
-  SCHOOLS.some((school) => item.text.toLowerCase().includes(school.toLowerCase())) ||
-  // Pattern per riconoscere nomi di scuole comuni
-  /^[A-Z][a-zA-Z\s&]+(?:College|University|Institute|School|Academy)$/i.test(item.text) ||
-  // Pattern per scuole con "of" (es. "University of California")
-  /^[A-Z][a-zA-Z\s&]+of\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text) ||
-  // Pattern per scuole italiane con "degli Studi" (es. "Università degli Studi di Milano")
-  /^[A-Z][a-zA-Z\s&]+degli\s+Studi\s+di\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text) ||
-  // Pattern per scuole italiane con "di" (es. "Politecnico di Milano")
-  /^[A-Z][a-zA-Z\s&]+di\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text) ||
-  // Pattern per scuole italiane con "del" (es. "Istituto del Design")
-  /^[A-Z][a-zA-Z\s&]+del\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text) ||
-  // Pattern per scuole italiane con "della" (es. "Accademia della Moda")
-  /^[A-Z][a-zA-Z\s&]+della\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text) ||
-  // Pattern per scuole italiane con "delle" (es. "Scuola delle Arti")
-  /^[A-Z][a-zA-Z\s&]+delle\s+[A-Z][a-zA-Z\s&]+$/i.test(item.text);
+const hasSchool = (item: TextItem) => {
+  const text = item.text.trim();
+  
+  // Controlla se contiene keywords di scuole
+  const hasSchoolKeyword = SCHOOLS.some((school) => text.toLowerCase().includes(school.toLowerCase()));
+  
+  // Pattern più flessibili per riconoscere nomi di scuole
+  const schoolPatterns = [
+    // Pattern base per scuole (es. "Harvard University", "MIT")
+    /^[A-Z][a-zA-Z\s&.,-]+(?:College|University|Institute|School|Academy|Uni|Politecnico|Istituto|Accademia)$/i,
+    // Pattern per scuole con "of" (es. "University of California")
+    /^[A-Z][a-zA-Z\s&.,-]+of\s+[A-Z][a-zA-Z\s&.,-]+$/i,
+    // Pattern per scuole italiane con "degli Studi" (es. "Università degli Studi di Milano")
+    /^[A-Z][a-zA-Z\s&.,-]+degli\s+Studi\s+di\s+[A-Z][a-zA-Z\s&.,-]+$/i,
+    // Pattern per scuole italiane con "di" (es. "Politecnico di Milano")
+    /^[A-Z][a-zA-Z\s&.,-]+di\s+[A-Z][a-zA-Z\s&.,-]+$/i,
+    // Pattern per scuole italiane con "del" (es. "Istituto del Design")
+    /^[A-Z][a-zA-Z\s&.,-]+del\s+[A-Z][a-zA-Z\s&.,-]+$/i,
+    // Pattern per scuole italiane con "della" (es. "Accademia della Moda")
+    /^[A-Z][a-zA-Z\s&.,-]+della\s+[A-Z][a-zA-Z\s&.,-]+$/i,
+    // Pattern per scuole italiane con "delle" (es. "Scuola delle Arti")
+    /^[A-Z][a-zA-Z\s&.,-]+delle\s+[A-Z][a-zA-Z\s&.,-]+$/i,
+    // Pattern per scuole con abbreviazioni (es. "UCLA", "MIT", "NYU")
+    /^[A-Z]{2,6}$/,
+    // Pattern per scuole con numeri (es. "University of California, Berkeley")
+    /^[A-Z][a-zA-Z\s&.,-]*(?:College|University|Institute|School|Academy)[\s,]*[A-Z][a-zA-Z\s&.,-]*$/i
+  ];
+  
+  const matchesPattern = schoolPatterns.some(pattern => pattern.test(text));
+  
+  // Debug logging
+  if (hasSchoolKeyword || matchesPattern) {
+    console.log('🎓 School detected:', text, { hasSchoolKeyword, matchesPattern });
+  }
+  
+  return hasSchoolKeyword || matchesPattern;
+};
 // prettier-ignore
 const DEGREES = [
   // English
@@ -110,14 +131,37 @@ const DEGREES = [
   "Summa Cum Laude", "110 e Lode", "110/110", "30 e Lode", "30/30"
 ];
 
-const hasDegree = (item: TextItem) =>
-  DEGREES.some((degree) => item.text.toLowerCase().includes(degree.toLowerCase())) ||
-  // Pattern per gradi con abbreviazioni (es. B.S., M.A., PhD)
-  /^[ABMDP][A-Z\.]+\s*[A-Za-z\s]*$/i.test(item.text) ||
-  // Pattern per gradi completi (es. Bachelor of Science, Master of Arts)
-  /^(Bachelor|Master|Doctor|Associate)\s+of\s+[A-Za-z\s]+$/i.test(item.text) ||
-  // Pattern per gradi con specializzazione (es. MBA, JD, MD)
-  /^[A-Z]{2,4}$/.test(item.text);
+const hasDegree = (item: TextItem) => {
+  const text = item.text.trim();
+  
+  // Controlla se contiene keywords di gradi
+  const hasDegreeKeyword = DEGREES.some((degree) => text.toLowerCase().includes(degree.toLowerCase()));
+  
+  // Pattern più flessibili per riconoscere gradi
+  const degreePatterns = [
+    // Pattern per gradi con abbreviazioni (es. B.S., M.A., PhD)
+    /^[ABMDP][A-Z\.]+\s*[A-Za-z\s]*$/i,
+    // Pattern per gradi completi (es. Bachelor of Science, Master of Arts)
+    /^(Bachelor|Master|Doctor|Associate)\s+of\s+[A-Za-z\s]+$/i,
+    // Pattern per gradi con specializzazione (es. MBA, JD, MD)
+    /^[A-Z]{2,4}$/,
+    // Pattern per gradi italiani (es. Laurea in Informatica, Diploma di Perito)
+    /^(Laurea|Diploma|Master|Dottorato|Specializzazione)\s+(in|di|di\s+Perito)\s+[A-Za-z\s]+$/i,
+    // Pattern per gradi con voti (es. Bachelor of Science, 3.8 GPA)
+    /^(Bachelor|Master|Doctor|Associate|Laurea|Diploma).*$/i,
+    // Pattern per gradi con anni (es. B.S. Computer Science 2020)
+    /^[ABMDP][A-Z\.]+\s+[A-Za-z\s]+\s+\d{4}$/i
+  ];
+  
+  const matchesPattern = degreePatterns.some(pattern => pattern.test(text));
+  
+  // Debug logging
+  if (hasDegreeKeyword || matchesPattern) {
+    console.log('🎓 Degree detected:', text, { hasDegreeKeyword, matchesPattern });
+  }
+  
+  return hasDegreeKeyword || matchesPattern;
+};
 const matchGPA = (item: TextItem) => {
   // Pattern più specifici per GPA
   const gpaPatterns = [
@@ -169,15 +213,15 @@ const matchGrade = (item: TextItem) => {
 
 const SCHOOL_FEATURE_SETS: FeatureSet[] = [
   [hasSchool, 4],
-  [hasDegree, -4], // Ripristinato a -4 per evitare sovrapposizioni
-  [hasNumber, -3], // Ripristinato a -3
-  [hasComma, -2], // Ripristinato a -2
+  [hasDegree, -2], // Ridotto da -4 a -2 per essere meno restrittivo
+  [hasNumber, -1], // Ridotto da -3 a -1
+  [hasComma, -1], // Ridotto da -2 a -1
 ];
 
 const DEGREE_FEATURE_SETS: FeatureSet[] = [
   [hasDegree, 4],
-  [hasSchool, -4], // Ripristinato a -4 per evitare sovrapposizioni
-  [hasNumber, -2], // Ripristinato a -2
+  [hasSchool, -2], // Ridotto da -4 a -2 per essere meno restrittivo
+  [hasNumber, -1], // Ridotto da -2 a -1
   [hasComma, -1],
 ];
 
@@ -196,9 +240,20 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
   const lines = getSectionLinesByKeywords(sections, ["education"]);
   const subsections = divideSectionIntoSubsections(lines);
   
+  console.log('🎓 Education parsing started:', {
+    linesFound: lines.length,
+    subsections: subsections.length,
+    sections: Object.keys(sections)
+  });
+  
   
   for (const subsectionLines of subsections) {
     const textItems = subsectionLines.flat();
+    
+    console.log('🎓 Processing education subsection:', {
+      textItems: textItems.map(item => item.text),
+      subsectionLines: subsectionLines.map(line => line.map(item => item.text))
+    });
     
     // Estrai prima la data per escluderla dagli altri campi
     const [date, dateScores] = getTextWithHighestFeatureScore(
@@ -216,6 +271,8 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
       SCHOOL_FEATURE_SETS
     );
     
+    console.log('🎓 School extraction result:', { school, schoolScores });
+    
     // Escludi il testo già estratto come school per evitare sovrapposizioni
     const nonSchoolItems = nonDateItems.filter(item => item.text.trim() !== school?.trim());
     
@@ -223,6 +280,8 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
       nonSchoolItems,
       DEGREE_FEATURE_SETS
     );
+    
+    console.log('🎓 Degree extraction result:', { degree, degreeScores });
     
     // Escludi il testo già estratto come degree per evitare sovrapposizioni
     const nonDegreeItems = nonSchoolItems.filter(item => item.text.trim() !== degree?.trim());
@@ -250,7 +309,11 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
       descriptions = getBulletPointsFromLines(descriptionsLines);
     }
 
-    educations.push({ school, degree, gpa: validGPA, date, descriptions });
+    const education = { school, degree, gpa: validGPA, date, descriptions };
+    
+    console.log('🎓 Final education entry:', education);
+    
+    educations.push(education);
     educationsScores.push({
       schoolScores,
       degreeScores,
@@ -258,6 +321,11 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
       dateScores,
     });
   }
+
+  console.log('🎓 Education parsing completed:', {
+    totalEducations: educations.length,
+    educations: educations
+  });
 
   if (educations.length !== 0) {
     const coursesLines = getSectionLinesByKeywords(sections, ["course"]);
