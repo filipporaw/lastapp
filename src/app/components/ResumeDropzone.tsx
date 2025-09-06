@@ -145,7 +145,7 @@ export const ResumeDropzone = ({
       workExperiences: resume.workExperiences.length > 0,
       educations: resume.educations.length > 0,
       projects: resume.projects.length > 0,
-      skills: resume.skills.descriptions.length > 0 || resume.skills.featuredSkills.some(skill => skill.skill.trim() !== ''),
+      skills: resume.skills.descriptions.length > 0 || resume.skills.featuredSkills.some((skill: { skill: string; rating: number }) => skill.skill.trim() !== ''),
       custom: resume.custom.descriptions.length > 0,
     };
     
@@ -155,6 +155,13 @@ export const ResumeDropzone = ({
         settings.formToShow[section] = true;
       }
     }
+    
+    // Debug: Log per verificare se la sezione custom ha dati
+    console.log('Custom section data:', {
+      descriptions: resume.custom.descriptions,
+      hasDescriptions: resume.custom.descriptions.length > 0,
+      willShow: sectionToFormToShow.custom
+    });
 
     // Set privacy statements based on detected statements
     if (privacyStatements) {

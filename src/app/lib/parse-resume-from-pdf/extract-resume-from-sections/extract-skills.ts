@@ -10,12 +10,24 @@ import {
 
 // Funzioni per riconoscere diversi pattern di rating
 const hasRatingPattern = (text: string): number | null => {
-  // Pattern 1: Cerchi/pallini (●○○○○, ●●●○○, etc.)
+  // Pattern 1: Cerchi/pallini (●○○○○, ●●●○○, etc.) - migliorato
   const circlePattern = /[●○]{1,5}$/;
   const circleMatch = text.match(circlePattern);
   if (circleMatch) {
     const circles = circleMatch[0];
-    return circles.split('●').length - 1; // Conta i cerchi pieni
+    const filledCircles = (circles.match(/●/g) || []).length;
+    return filledCircles;
+  }
+  
+  // Pattern 1b: Cerchi/pallini nel mezzo del testo (React ●●●●○)
+  const circlePatternMid = /[●○]{1,5}/;
+  const circleMatchMid = text.match(circlePatternMid);
+  if (circleMatchMid) {
+    const circles = circleMatchMid[0];
+    const filledCircles = (circles.match(/●/g) || []).length;
+    if (filledCircles > 0) {
+      return filledCircles;
+    }
   }
   
   // Pattern 2: Stelle (★★★★☆, ★★★☆☆, etc.)
@@ -123,6 +135,8 @@ const parseFeaturedSkills = (textItems: TextItem[]): FeaturedSkill[] => {
   const featuredSkills = deepClone(initialFeaturedSkills);
   let skillIndex = 0;
   
+  console.log('Parsing featured skills from text items:', textItems.map(item => item.text));
+  
   for (let i = 0; i < textItems.length && skillIndex < 6; i++) {
     const textItem = textItems[i];
     const text = textItem.text.trim();
@@ -138,6 +152,7 @@ const parseFeaturedSkills = (textItems: TextItem[]): FeaturedSkill[] => {
         const skillName = extractSkillName(skillPart);
         
         if (skillName) { // Solo se c'è un nome di skill valido
+          console.log(`Skill: "${skillName}", Rating: ${rating}, Original: "${skillPart}"`);
           featuredSkills[skillIndex] = {
             skill: skillName,
             rating: rating !== null ? rating : 0, // Default rating 0 se non trovato (non inventare)
