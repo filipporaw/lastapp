@@ -13,6 +13,54 @@ import addPdfSrc from "public/assets/add-pdf.svg";
 import Image from "next/image";
 import { cx } from "lib/cx";
 import { deepClone } from "lib/deep-clone";
+import { initialResumeState } from "lib/redux/resumeSlice";
+
+const validateAndFixResume = (resume: any) => {
+  // Ensure all required fields are present and properly initialized
+  const validatedResume = { ...initialResumeState, ...resume };
+  
+  // Ensure custom field is properly initialized
+  if (!validatedResume.custom) {
+    validatedResume.custom = { descriptions: [] };
+  }
+  if (!validatedResume.custom.descriptions) {
+    validatedResume.custom.descriptions = [];
+  }
+  
+  // Ensure all arrays are properly initialized
+  if (!validatedResume.workExperiences) {
+    validatedResume.workExperiences = [];
+  }
+  if (!validatedResume.educations) {
+    validatedResume.educations = [];
+  }
+  if (!validatedResume.projects) {
+    validatedResume.projects = [];
+  }
+  if (!validatedResume.skills) {
+    validatedResume.skills = { featuredSkills: [], descriptions: [] };
+  }
+  if (!validatedResume.skills.featuredSkills) {
+    validatedResume.skills.featuredSkills = [];
+  }
+  if (!validatedResume.skills.descriptions) {
+    validatedResume.skills.descriptions = [];
+  }
+  
+  // Ensure profile is properly initialized
+  if (!validatedResume.profile) {
+    validatedResume.profile = {
+      name: "",
+      email: "",
+      phone: "",
+      url: "",
+      summary: "",
+      location: "",
+    };
+  }
+  
+  return validatedResume;
+};
 
 const defaultFileState = {
   name: "",
@@ -81,10 +129,11 @@ export const ResumeDropzone = ({
             setErrorMsg("Invalid json file");
             return;
         }
-        resume = data.resume;
+        resume = validateAndFixResume(data.resume);
         settings = data.settings;
     } else {
         resume = await parseResumeFromPdf(file.fileUrl);
+        resume = validateAndFixResume(resume);
         settings = deepClone(initialSettings);
     }
     

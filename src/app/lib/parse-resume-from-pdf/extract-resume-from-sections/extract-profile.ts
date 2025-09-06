@@ -63,63 +63,63 @@ const has4OrMoreWords = (item: TextItem) => item.text.split(" ").length >= 4;
  *      -> is bolded or has all letters as uppercase
  */
 const NAME_FEATURE_SETS: FeatureSet[] = [
-  [matchOnlyLetterSpaceOrPeriod, 3, true],
-  [isBold, 2],
-  [hasLetterAndIsAllUpperCase, 2],
+  [matchOnlyLetterSpaceOrPeriod, 4, true],
+  [isBold, 3],
+  [hasLetterAndIsAllUpperCase, 3],
   // Match against other unique attributes
-  [hasAt, -4], // Email
-  [hasNumber, -4], // Phone
-  [hasParenthesis, -4], // Phone
-  [hasComma, -4], // Location
-  [hasSlash, -4], // Url
-  [has4OrMoreWords, -2], // Summary
+  [hasAt, -6], // Email
+  [hasNumber, -6], // Phone
+  [hasParenthesis, -6], // Phone
+  [hasComma, -6], // Location
+  [hasSlash, -6], // Url
+  [has4OrMoreWords, -4], // Summary
 ];
 
 // Email -> match email regex xxx@xxx.xxx
 const EMAIL_FEATURE_SETS: FeatureSet[] = [
-  [matchEmail, 4, true],
-  [isBold, -1], // Name
-  [hasLetterAndIsAllUpperCase, -1], // Name
-  [hasParenthesis, -4], // Phone
-  [hasComma, -4], // Location
-  [hasSlash, -4], // Url
-  [has4OrMoreWords, -4], // Summary
+  [matchEmail, 5, true],
+  [isBold, -2], // Name
+  [hasLetterAndIsAllUpperCase, -2], // Name
+  [hasParenthesis, -6], // Phone
+  [hasComma, -6], // Location
+  [hasSlash, -6], // Url
+  [has4OrMoreWords, -6], // Summary
 ];
 
 // Phone -> match phone regex (xxx)-xxx-xxxx
 const PHONE_FEATURE_SETS: FeatureSet[] = [
-  [matchPhone, 4, true],
-  [hasLetter, -4], // Name, Email, Location, Url, Summary
+  [matchPhone, 5, true],
+  [hasLetter, -6], // Name, Email, Location, Url, Summary
 ];
 
 // Location -> match location regex <City>, <ST>
 const LOCATION_FEATURE_SETS: FeatureSet[] = [
-  [matchCityAndState, 4, true],
-  [isBold, -1], // Name
-  [hasAt, -4], // Email
-  [hasParenthesis, -3], // Phone
-  [hasSlash, -4], // Url
+  [matchCityAndState, 5, true],
+  [isBold, -2], // Name
+  [hasAt, -6], // Email
+  [hasParenthesis, -4], // Phone
+  [hasSlash, -6], // Url
 ];
 
 // URL -> match url regex xxx.xxx/xxx
 const URL_FEATURE_SETS: FeatureSet[] = [
-  [matchUrl, 4, true],
-  [matchUrlHttpFallback, 3, true],
-  [matchUrlWwwFallback, 3, true],
-  [isBold, -1], // Name
-  [hasAt, -4], // Email
-  [hasParenthesis, -3], // Phone
-  [hasComma, -4], // Location
-  [has4OrMoreWords, -4], // Summary
+  [matchUrl, 5, true],
+  [matchUrlHttpFallback, 4, true],
+  [matchUrlWwwFallback, 4, true],
+  [isBold, -2], // Name
+  [hasAt, -6], // Email
+  [hasParenthesis, -4], // Phone
+  [hasComma, -6], // Location
+  [has4OrMoreWords, -6], // Summary
 ];
 
 // Summary -> has 4 or more words
 const SUMMARY_FEATURE_SETS: FeatureSet[] = [
-  [has4OrMoreWords, 4],
-  [isBold, -1], // Name
-  [hasAt, -4], // Email
-  [hasParenthesis, -3], // Phone
-  [matchCityAndState, -4, false], // Location
+  [has4OrMoreWords, 3],
+  [isBold, -2], // Name
+  [hasAt, -6], // Email
+  [hasParenthesis, -4], // Phone
+  [matchCityAndState, -6, false], // Location
 ];
 
 export const extractProfile = (sections: ResumeSectionToLines) => {
