@@ -66,6 +66,12 @@ const SCHOOLS = [
 const hasSchool = (item: TextItem) => {
   const text = item.text.trim();
   
+  // Escludi esplicitamente i gradi per evitare confusione
+  const isDegree = DEGREES.some((degree) => text.toLowerCase().includes(degree.toLowerCase()));
+  if (isDegree) {
+    return false; // Non è una scuola se contiene keywords di gradi
+  }
+  
   // Controlla se contiene keywords di scuole
   const hasSchoolKeyword = SCHOOLS.some((school) => text.toLowerCase().includes(school.toLowerCase()));
   
@@ -88,7 +94,9 @@ const hasSchool = (item: TextItem) => {
     // Pattern per scuole con abbreviazioni (es. "UCLA", "MIT", "NYU")
     /^[A-Z]{2,6}$/,
     // Pattern per scuole con numeri (es. "University of California, Berkeley")
-    /^[A-Z][a-zA-Z\s&.,-]*(?:College|University|Institute|School|Academy)[\s,]*[A-Z][a-zA-Z\s&.,-]*$/i
+    /^[A-Z][a-zA-Z\s&.,-]*(?:College|University|Institute|School|Academy)[\s,]*[A-Z][a-zA-Z\s&.,-]*$/i,
+    // Pattern per scuole con parentesi (es. "University of Pavia (Pavia, IT)")
+    /^[A-Z][a-zA-Z\s&.,-]+(?:College|University|Institute|School|Academy|Uni|Politecnico|Istituto|Accademia)[\s,]*\([^)]+\)$/i
   ];
   
   const matchesPattern = schoolPatterns.some(pattern => pattern.test(text));
@@ -134,6 +142,12 @@ const DEGREES = [
 const hasDegree = (item: TextItem) => {
   const text = item.text.trim();
   
+  // Escludi esplicitamente le scuole per evitare confusione
+  const isSchool = SCHOOLS.some((school) => text.toLowerCase().includes(school.toLowerCase()));
+  if (isSchool && !text.toLowerCase().includes('degree') && !text.toLowerCase().includes('master') && !text.toLowerCase().includes('bachelor')) {
+    return false; // Non è un grado se contiene keywords di scuole ma non di gradi
+  }
+  
   // Controlla se contiene keywords di gradi
   const hasDegreeKeyword = DEGREES.some((degree) => text.toLowerCase().includes(degree.toLowerCase()));
   
@@ -150,7 +164,11 @@ const hasDegree = (item: TextItem) => {
     // Pattern per gradi con voti (es. Bachelor of Science, 3.8 GPA)
     /^(Bachelor|Master|Doctor|Associate|Laurea|Diploma).*$/i,
     // Pattern per gradi con anni (es. B.S. Computer Science 2020)
-    /^[ABMDP][A-Z\.]+\s+[A-Za-z\s]+\s+\d{4}$/i
+    /^[ABMDP][A-Z\.]+\s+[A-Za-z\s]+\s+\d{4}$/i,
+    // Pattern specifico per "Master's Degree in [subject]"
+    /^Master'?s?\s+Degree\s+in\s+[A-Za-z\s]+$/i,
+    // Pattern specifico per "Bachelor's Degree in [subject]"
+    /^Bachelor'?s?\s+Degree\s+in\s+[A-Za-z\s]+$/i
   ];
   
   const matchesPattern = degreePatterns.some(pattern => pattern.test(text));
