@@ -29,8 +29,8 @@ const hasJobTitle = (item: TextItem) =>
   );
 const hasMoreThan5Words = (item: TextItem) => item.text.split(/\s/).length > 5;
 const JOB_TITLE_FEATURE_SET: FeatureSet[] = [
-  [hasJobTitle, 5],
-  [hasNumber, -6],
+  [hasJobTitle, 4],
+  [hasNumber, -4],
   [hasMoreThan5Words, -3],
 ];
 
@@ -59,8 +59,8 @@ export const extractWorkExperience = (sections: ResumeSectionToLines) => {
     );
     const COMPANY_FEATURE_SET: FeatureSet[] = [
       [isBold, 3],
-      [getHasText(date), -6],
-      [getHasText(jobTitle), -6],
+      [getHasText(date), -4],
+      [getHasText(jobTitle), -4],
     ];
     const [company, companyScores] = getTextWithHighestFeatureScore(
       subsectionInfoTextItems,

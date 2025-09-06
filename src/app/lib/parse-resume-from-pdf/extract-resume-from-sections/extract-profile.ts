@@ -67,59 +67,59 @@ const NAME_FEATURE_SETS: FeatureSet[] = [
   [isBold, 3],
   [hasLetterAndIsAllUpperCase, 3],
   // Match against other unique attributes
-  [hasAt, -6], // Email
-  [hasNumber, -6], // Phone
-  [hasParenthesis, -6], // Phone
-  [hasComma, -6], // Location
-  [hasSlash, -6], // Url
+  [hasAt, -4], // Email
+  [hasNumber, -4], // Phone
+  [hasParenthesis, -4], // Phone
+  [hasComma, -4], // Location
+  [hasSlash, -4], // Url
   [has4OrMoreWords, -4], // Summary
 ];
 
 // Email -> match email regex xxx@xxx.xxx
 const EMAIL_FEATURE_SETS: FeatureSet[] = [
-  [matchEmail, 5, true],
+  [matchEmail, 4, true],
   [isBold, -2], // Name
   [hasLetterAndIsAllUpperCase, -2], // Name
-  [hasParenthesis, -6], // Phone
-  [hasComma, -6], // Location
-  [hasSlash, -6], // Url
-  [has4OrMoreWords, -6], // Summary
+  [hasParenthesis, -4], // Phone
+  [hasComma, -4], // Location
+  [hasSlash, -4], // Url
+  [has4OrMoreWords, -4], // Summary
 ];
 
 // Phone -> match phone regex (xxx)-xxx-xxxx
 const PHONE_FEATURE_SETS: FeatureSet[] = [
-  [matchPhone, 5, true],
-  [hasLetter, -6], // Name, Email, Location, Url, Summary
+  [matchPhone, 4, true],
+  [hasLetter, -4], // Name, Email, Location, Url, Summary
 ];
 
 // Location -> match location regex <City>, <ST>
 const LOCATION_FEATURE_SETS: FeatureSet[] = [
-  [matchCityAndState, 5, true],
+  [matchCityAndState, 4, true],
   [isBold, -2], // Name
-  [hasAt, -6], // Email
+  [hasAt, -4], // Email
   [hasParenthesis, -4], // Phone
-  [hasSlash, -6], // Url
+  [hasSlash, -4], // Url
 ];
 
 // URL -> match url regex xxx.xxx/xxx
 const URL_FEATURE_SETS: FeatureSet[] = [
-  [matchUrl, 5, true],
-  [matchUrlHttpFallback, 4, true],
-  [matchUrlWwwFallback, 4, true],
+  [matchUrl, 4, true],
+  [matchUrlHttpFallback, 3, true],
+  [matchUrlWwwFallback, 3, true],
   [isBold, -2], // Name
-  [hasAt, -6], // Email
+  [hasAt, -4], // Email
   [hasParenthesis, -4], // Phone
-  [hasComma, -6], // Location
-  [has4OrMoreWords, -6], // Summary
+  [hasComma, -4], // Location
+  [has4OrMoreWords, -4], // Summary
 ];
 
 // Summary -> has 4 or more words
 const SUMMARY_FEATURE_SETS: FeatureSet[] = [
   [has4OrMoreWords, 3],
   [isBold, -2], // Name
-  [hasAt, -6], // Email
+  [hasAt, -4], // Email
   [hasParenthesis, -4], // Phone
-  [matchCityAndState, -6, false], // Location
+  [matchCityAndState, -4, false], // Location
 ];
 
 export const extractProfile = (sections: ResumeSectionToLines) => {
