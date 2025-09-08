@@ -4,7 +4,6 @@ import { useJSON, useSetDefaultScale } from "components/Resume/hooks";
 import {
   MagnifyingGlassIcon,
   ArrowDownTrayIcon,
-  DocumentTextIcon,
 } from "@heroicons/react/24/outline";
 import { usePDF } from "@react-pdf/renderer";
 import dynamic from "next/dynamic";
@@ -70,14 +69,15 @@ const ResumeControlBar = ({
         </label>
       </div>
       <div className="flex items-center gap-2 flex-shrink-0">
-        <a
+        {/* JSON download functionality kept but hidden - can be re-enabled in future */}
+        {/* <a
           className="flex items-center gap-2 rounded-md border border-gray-300 px-4 py-2 hover:bg-gray-50 hover:border-gray-400 transition-colors duration-200 bg-white shadow-sm"
           href={url!}
           download={`${fileName}.json`}
         >
           <DocumentTextIcon className="h-4 w-4" />
           <span className="whitespace-nowrap text-sm font-medium">Download JSON</span>
-        </a>
+        </a> */}
         <a
           className="flex items-center gap-2 rounded-md border border-gray-300 px-4 py-2 hover:bg-gray-50 hover:border-gray-400 transition-colors duration-200 bg-white shadow-sm"
           href={instance.url!}

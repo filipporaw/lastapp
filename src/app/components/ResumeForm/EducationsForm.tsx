@@ -53,7 +53,7 @@ export const EducationsForm = () => {
               label="School"
               labelClassName="col-span-4"
               name="school"
-              placeholder="University of Pavia"
+              placeholder="University of Pavia (Pavia, IT)"
               value={school}
               onChange={handleEducationChange}
             />
