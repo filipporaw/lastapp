@@ -4,6 +4,7 @@ import { getSectionLinesByKeywords } from "lib/parse-resume-from-pdf/extract-res
 import {
   getBulletPointsFromLines,
   getDescriptionsLineIdx,
+  BULLET_POINTS,
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/bullet-points";
 import { isBold, hasLetterAndIsAllUpperCase } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
 
@@ -670,7 +671,23 @@ export const extractCustom = (sections: ResumeSectionToLines) => {
   // Per le sezioni custom, prendiamo tutte le righe tranne quelle che sono chiaramente statement/privacy
   // Non usiamo getDescriptionsLineIdx perché potrebbe saltare righe importanti
   const descriptionsLines = allCustomLines;
-  const descriptions = getBulletPointsFromLines(descriptionsLines);
+  
+  // Per le sezioni custom, processiamo ogni riga individualmente per non perdere contenuto
+  const descriptions: string[] = [];
+  for (const line of descriptionsLines) {
+    const lineText = line.map(item => item.text).join(' ').trim();
+    if (lineText) {
+      // Se la riga contiene bullet points, processala normalmente
+      const hasBulletPoint = BULLET_POINTS.some(bullet => lineText.includes(bullet));
+      if (hasBulletPoint) {
+        const bulletDescriptions = getBulletPointsFromLines([line]);
+        descriptions.push(...bulletDescriptions);
+      } else {
+        // Se non ha bullet points, aggiungi la riga così com'è
+        descriptions.push(lineText);
+      }
+    }
+  }
 
   console.log('🎯 Custom section parsing result:', {
     descriptionsCount: descriptions.length,

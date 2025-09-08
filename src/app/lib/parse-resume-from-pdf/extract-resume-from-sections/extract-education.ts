@@ -80,7 +80,7 @@ const hasSchool = (item: TextItem) => {
   const schoolPatterns = [
     // Pattern base per scuole (es. "Harvard University", "MIT")
     /^[A-Z][a-zA-Z\s&.,-]+(?:College|University|Institute|School|Academy|Uni|Politecnico|Istituto|Accademia)$/i,
-    // Pattern per scuole con "of" (es. "University of California")
+    // Pattern per scuole con "of" (es. "University of California", "University of Pavia")
     /^[A-Z][a-zA-Z\s&.,-]+of\s+[A-Z][a-zA-Z\s&.,-]+$/i,
     // Pattern per scuole italiane con "degli Studi" (es. "Università degli Studi di Milano")
     /^[A-Z][a-zA-Z\s&.,-]+degli\s+Studi\s+di\s+[A-Z][a-zA-Z\s&.,-]+$/i,
@@ -99,7 +99,15 @@ const hasSchool = (item: TextItem) => {
     // Pattern per scuole con parentesi (es. "University of Pavia (Pavia, IT)")
     /University.*\([^)]+\)/i,
     // Pattern specifico per "University of Pavia (Pavia, IT)"
-    /^University of Pavia \(Pavia, IT\)$/i
+    /^University of Pavia \(Pavia, IT\)$/i,
+    // Pattern più generico per "University of [City]" senza parentesi
+    /^University of [A-Z][a-zA-Z\s&.,-]+$/i,
+    // Pattern per "Università degli Studi di [City]" senza parentesi
+    /^Università degli Studi di [A-Z][a-zA-Z\s&.,-]+$/i,
+    // Pattern per "Università di [City]"
+    /^Università di [A-Z][a-zA-Z\s&.,-]+$/i,
+    // Pattern per scuole che contengono "Pavia" specificamente
+    /.*Pavia.*/i
   ];
   
   const matchesPattern = schoolPatterns.some(pattern => pattern.test(text));
@@ -108,8 +116,8 @@ const hasSchool = (item: TextItem) => {
   if (hasSchoolKeyword || matchesPattern) {
     console.log('🎓 School detected:', text, { hasSchoolKeyword, matchesPattern });
   } else {
-  // Debug specifico per "University of Pavia"
-  if (text.toLowerCase().includes('university') && text.toLowerCase().includes('pavia')) {
+  // Debug specifico per "University of Pavia" e "Università degli Studi di Pavia"
+  if (text.toLowerCase().includes('pavia') || (text.toLowerCase().includes('university') && text.toLowerCase().includes('pavia'))) {
     console.log('🔍 Debug University of Pavia:', {
       text,
       hasSchoolKeyword,
@@ -122,8 +130,8 @@ const hasSchool = (item: TextItem) => {
     });
   }
   
-  // Debug generale per tutti i testi che contengono "university"
-  if (text.toLowerCase().includes('university')) {
+  // Debug generale per tutti i testi che contengono "university" o "università"
+  if (text.toLowerCase().includes('university') || text.toLowerCase().includes('università')) {
     console.log('🔍 Debug any university:', {
       text,
       hasSchoolKeyword,

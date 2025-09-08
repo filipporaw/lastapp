@@ -165,20 +165,32 @@ const parseFeaturedSkills = (textItems: TextItem[]): FeaturedSkill[] => {
 
 export const extractSkills = (sections: ResumeSectionToLines) => {
   const lines = getSectionLinesByKeywords(sections, ["skill"]);
-  const descriptionsLineIdx = getDescriptionsLineIdx(lines) ?? 0;
-  const descriptionsLines = lines.slice(descriptionsLineIdx);
-  const descriptions = getBulletPointsFromLines(descriptionsLines);
-
-  let featuredSkills = deepClone(initialFeaturedSkills);
   
-  if (descriptionsLineIdx !== 0) {
-    const featuredSkillsLines = lines.slice(0, descriptionsLineIdx);
-    const featuredSkillsTextItems = featuredSkillsLines
-      .flat()
-      .filter((item) => item.text.trim());
-    
-    featuredSkills = parseFeaturedSkills(featuredSkillsTextItems);
-  }
+  console.log('🔧 Skills parsing started:', {
+    linesFound: lines.length,
+    lines: lines.map(line => line.map(item => item.text))
+  });
+  
+  // Process all lines to extract both featured skills and descriptions
+  const allTextItems = lines.flat().filter((item) => item.text.trim());
+  
+  // Try to identify featured skills (usually at the top, shorter lines with ratings)
+  const featuredSkills = parseFeaturedSkills(allTextItems);
+  
+  // For descriptions, use all lines but filter out empty ones and privacy statements
+  const descriptionsLines = lines.filter(line => {
+    const lineText = line.map(item => item.text).join(' ').trim();
+    return lineText && !lineText.toLowerCase().includes('privacy');
+  });
+  
+  const descriptions = getBulletPointsFromLines(descriptionsLines);
+  
+  console.log('🔧 Skills parsing result:', {
+    featuredSkillsCount: featuredSkills.filter(s => s.skill).length,
+    descriptionsCount: descriptions.length,
+    featuredSkills: featuredSkills.map(s => s.skill),
+    descriptions: descriptions
+  });
 
   const skills: ResumeSkills = {
     featuredSkills,
