@@ -100,8 +100,8 @@ const CoverLetterIframe = ({
     content: {
       greeting: coverLetter.profile.hiringManager || "Dear Hiring Manager,",
       body: coverLetter.content ? 
-        // Dividi il contenuto in paragrafi basati su punti o frasi lunghe
-        coverLetter.content.split(/(?<=\.)\s+/).filter((p: string) => p.trim().length > 0) :
+        // Dividi il contenuto solo sui doppi invii a capo per creare paragrafi reali
+        coverLetter.content.split(/\n\s*\n/).filter((p: string) => p.trim().length > 0) :
         [
           "Scrivo per esprimere il mio forte interesse per la posizione di " + coverLetter.profile.position + " presso " + coverLetter.profile.company + "."
         ],
