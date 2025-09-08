@@ -511,7 +511,12 @@ const isCustomSectionTitle = (line: TextItem[]): boolean => {
 export const extractCustom = (sections: ResumeSectionToLines) => {
   console.log('🎯 Custom section parsing started:', {
     sections: Object.keys(sections),
-    totalSections: Object.keys(sections).length
+    totalSections: Object.keys(sections).length,
+    allSections: Object.entries(sections).map(([name, lines]) => ({
+      name,
+      lineCount: lines.length,
+      content: lines.map(line => line.map(item => item.text))
+    }))
   });
 
   // Try to find custom sections using various keywords

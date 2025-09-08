@@ -24,10 +24,18 @@ export const groupLinesIntoSections = (lines: Lines) => {
   let sections: ResumeSectionToLines = {};
   let sectionName: string = PROFILE_SECTION;
   let sectionLines = [];
+  
+  console.log('📋 Grouping lines into sections - Total lines:', lines.length);
+  
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const text = line[0]?.text.trim();
-    if (isSectionTitle(line, i)) {
+    const isTitle = isSectionTitle(line, i);
+    
+    console.log(`📋 Line ${i}: "${text}" - Is section title: ${isTitle}`);
+    
+    if (isTitle) {
+      console.log(`📋 Creating section "${sectionName}" with ${sectionLines.length} lines`);
       sections[sectionName] = [...sectionLines];
       sectionName = text;
       sectionLines = [];
@@ -36,8 +44,11 @@ export const groupLinesIntoSections = (lines: Lines) => {
     }
   }
   if (sectionLines.length > 0) {
+    console.log(`📋 Creating final section "${sectionName}" with ${sectionLines.length} lines`);
     sections[sectionName] = [...sectionLines];
   }
+  
+  console.log('📋 Final sections:', Object.keys(sections));
   return sections;
 };
 

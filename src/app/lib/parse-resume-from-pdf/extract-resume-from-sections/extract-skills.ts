@@ -164,6 +164,8 @@ const parseFeaturedSkills = (textItems: TextItem[]): FeaturedSkill[] => {
 };
 
 export const extractSkills = (sections: ResumeSectionToLines) => {
+  console.log('🔧 Skills parsing started - All sections:', Object.keys(sections));
+  
   const lines = getSectionLinesByKeywords(sections, ["skill"]);
   
   console.log('🔧 Skills parsing started:', {
@@ -174,6 +176,8 @@ export const extractSkills = (sections: ResumeSectionToLines) => {
   // Process all lines to extract both featured skills and descriptions
   const allTextItems = lines.flat().filter((item) => item.text.trim());
   
+  console.log('🔧 All text items from skills section:', allTextItems.map(item => item.text));
+  
   // Try to identify featured skills (usually at the top, shorter lines with ratings)
   const featuredSkills = parseFeaturedSkills(allTextItems);
   
@@ -183,13 +187,16 @@ export const extractSkills = (sections: ResumeSectionToLines) => {
     return lineText && !lineText.toLowerCase().includes('privacy');
   });
   
+  console.log('🔧 Descriptions lines:', descriptionsLines.map(line => line.map(item => item.text)));
+  
   const descriptions = getBulletPointsFromLines(descriptionsLines);
   
   console.log('🔧 Skills parsing result:', {
     featuredSkillsCount: featuredSkills.filter(s => s.skill).length,
     descriptionsCount: descriptions.length,
     featuredSkills: featuredSkills.map(s => s.skill),
-    descriptions: descriptions
+    descriptions: descriptions,
+    allTextItems: allTextItems.map(item => item.text)
   });
 
   const skills: ResumeSkills = {
