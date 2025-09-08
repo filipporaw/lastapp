@@ -10,6 +10,7 @@ import { ResumePDFProject } from "./ResumePDFProject";
 import { ResumePDFSkills } from "./ResumePDFSkills";
 import { ResumePDFCustom } from "./ResumePDFCustom";
 import { ResumePDFPrivacyStatements } from "components/themes/core";
+import { loadStateFromLocalStorage } from "lib/redux/local-storage";
 
 export const ResumePDFDefault = ({
   resume,
@@ -65,9 +66,20 @@ export const ResumePDFDefault = ({
     ),
   };
 
+  // Get the complete state data for JSON metadata
+  const stateData = loadStateFromLocalStorage();
+  const jsonMetadata = stateData ? JSON.stringify(stateData) : '';
+
   return (
     <>
-      <Document title={`${name} Resume`} author={name} producer={"cv---maker"}>
+      <Document 
+        title={`${name} Resume`} 
+        author={name} 
+        producer={"cv---maker"}
+        subject={jsonMetadata}
+        keywords={`resume, cv, ${name}, cv---maker, json-data`}
+        creator={"cv---maker"}
+      >
         <Page
           size={documentSize === "A4" ? "A4" : "LETTER"}
           style={{
