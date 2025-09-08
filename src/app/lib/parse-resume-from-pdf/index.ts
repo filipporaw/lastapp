@@ -3,23 +3,41 @@ import { groupTextItemsIntoLines } from "lib/parse-resume-from-pdf/group-text-it
 import { groupLinesIntoSections } from "lib/parse-resume-from-pdf/group-lines-into-sections";
 import { extractResumeFromSections, detectPrivacyStatementsFromPDF } from "lib/parse-resume-from-pdf/extract-resume-from-sections";
 import * as pdfjs from "pdfjs-dist";
+import { PDFDocument } from "pdf-lib";
 
 /**
  * Check if PDF contains cv---maker metadata and extract JSON data
  */
+/**
+ * Check if PDF contains cv---maker metadata and extract JSON data using pdf-lib
+ */
 const extractMetadataFromPDF = async (fileUrl: string) => {
   try {
-    const pdfFile = await pdfjs.getDocument(fileUrl).promise;
-    const metadata = await pdfFile.getMetadata();
+    console.log('📄 Attempting to read PDF metadata with pdf-lib...');
     
-    console.log('📄 PDF metadata found:', metadata);
-    console.log('📄 PDF metadata info:', (metadata.info as any));
-    console.log('📄 PDF producer:', (metadata.info as any)?.producer);
-    console.log('📄 PDF subject length:', (metadata.info as any)?.subject?.length || 0);
-    console.log('📄 PDF subject preview:', (metadata.info as any)?.subject?.substring(0, 200) || 'No subject');
+    // Fetch the PDF file
+    const response = await fetch(fileUrl);
+    const pdfBytes = await response.arrayBuffer();
+    
+    // Load the PDF document
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+    
+    // Get metadata
+    const title = pdfDoc.getTitle();
+    const author = pdfDoc.getAuthor();
+    const subject = pdfDoc.getSubject();
+    const producer = pdfDoc.getProducer();
+    const creator = pdfDoc.getCreator();
+    
+    console.log('📄 PDF metadata found with pdf-lib:');
+    console.log('📄 Title:', title);
+    console.log('📄 Author:', author);
+    console.log('📄 Subject length:', subject?.length || 0);
+    console.log('📄 Subject preview:', subject?.substring(0, 200) || 'No subject');
+    console.log('📄 Producer:', producer);
+    console.log('📄 Creator:', creator);
     
     // PRIORITÀ ASSOLUTA: Se c'è un subject con contenuto, proviamo a parsarlo come JSON
-    const subject = (metadata.info as any)?.subject;
     if (subject && subject.length > 0) {
       console.log('🎯 Found subject field, attempting to parse as JSON');
       try {
@@ -30,24 +48,57 @@ const extractMetadataFromPDF = async (fileUrl: string) => {
         console.log('🎯 Successfully parsed JSON from subject field');
         return parsedData;
       } catch (error) {
-        console.log('📄 Subject field is not valid JSON, checking if it\'s cv---maker PDF:', error);
+        console.log('📄 Subject field is not valid JSON:', error);
         
         // Fallback: controlla se è un PDF cv---maker anche senza JSON valido
-        if ((metadata.info as any)?.producer === 'cv---maker') {
+        if (producer === 'cv---maker') {
           console.log('🎯 This is a cv---maker PDF but subject is not valid JSON');
         }
       }
     }
     
     // Controllo aggiuntivo per PDF cv---maker con producer corretto
-    if ((metadata.info as any)?.producer === 'cv---maker') {
+    if (producer === 'cv---maker') {
       console.log('🎯 Found cv---maker producer but no valid JSON in subject');
     }
     
     return null;
   } catch (error) {
-    console.log('📄 No metadata found or error reading metadata:', error);
-    return null;
+    console.log('📄 Error reading PDF metadata with pdf-lib:', error);
+    
+    // Fallback to pdfjs-dist if pdf-lib fails
+    try {
+      console.log('📄 Falling back to pdfjs-dist...');
+      const pdfFile = await pdfjs.getDocument(fileUrl).promise;
+      const metadata = await pdfFile.getMetadata();
+      
+      console.log('📄 PDF metadata found with pdfjs-dist:', metadata);
+      console.log('📄 PDF metadata info:', (metadata.info as any));
+      console.log('📄 PDF producer:', (metadata.info as any)?.producer);
+      console.log('📄 PDF subject length:', (metadata.info as any)?.subject?.length || 0);
+      console.log('📄 PDF subject preview:', (metadata.info as any)?.subject?.substring(0, 200) || 'No subject');
+      
+      // Try to parse subject as JSON
+      const subject = (metadata.info as any)?.subject;
+      if (subject && subject.length > 0) {
+        console.log('🎯 Found subject field with pdfjs-dist, attempting to parse as JSON');
+        try {
+          const jsonData = subject;
+          console.log('🎯 JSON data length:', jsonData.length);
+          console.log('🎯 JSON data preview:', jsonData.substring(0, 200) + '...');
+          const parsedData = JSON.parse(jsonData);
+          console.log('🎯 Successfully parsed JSON from subject field with pdfjs-dist');
+          return parsedData;
+        } catch (error) {
+          console.log('📄 Subject field is not valid JSON with pdfjs-dist:', error);
+        }
+      }
+      
+      return null;
+    } catch (fallbackError) {
+      console.log('📄 Both pdf-lib and pdfjs-dist failed:', fallbackError);
+      return null;
+    }
   }
 };
 
