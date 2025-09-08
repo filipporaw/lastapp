@@ -552,6 +552,12 @@ export const extractCustom = (sections: ResumeSectionToLines) => {
       lowerSectionName.includes(keyword.toLowerCase())
     );
     
+    console.log(`🎯 Checking section "${sectionName}":`, {
+      isStandardSection,
+      hasCustomKeywords,
+      willInclude: !isStandardSection && hasCustomKeywords
+    });
+    
     return !isStandardSection && hasCustomKeywords;
   });
   
@@ -576,7 +582,7 @@ export const extractCustom = (sections: ResumeSectionToLines) => {
         .join(' ');
       
       // Verifica se il contenuto della sezione custom è troppo simile al summary/profilo
-      const similarityThreshold = 0.7; // 70% di similarità
+      const similarityThreshold = 0.9; // 90% di similarità (più permissivo)
       const similarity = calculateTextSimilarity(sectionContent, profileSummaryContent);
       
       console.log(`🎯 Checking section "${sectionName}" similarity with profile:`, {

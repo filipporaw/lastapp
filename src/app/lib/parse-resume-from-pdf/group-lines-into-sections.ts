@@ -56,6 +56,23 @@ const SECTION_TITLE_SECONDARY_KEYWORDS = [
   "award",
   "honor",
   "project",
+  "certification",
+  "certificate",
+  "certified",
+  "languages",
+  "volunteer",
+  "publications",
+  "references",
+  "portfolio",
+  "activities",
+  "interests",
+  "hobbies",
+  "achievements",
+  "additional",
+  "other",
+  "miscellaneous",
+  "extra",
+  "personal",
 ];
 const SECTION_TITLE_KEYWORDS = [
   ...SECTION_TITLE_PRIMARY_KEYWORDS,
@@ -81,12 +98,12 @@ const isSectionTitle = (line: Line, lineNumber: number) => {
   // The following is a fallback heuristic to detect section title if it includes a keyword match
   // (This heuristics is not well tested and may not work well)
   const text = textItem.text.trim();
-  const textHasAtMost2Words =
-    text.split(" ").filter((s) => s !== "&").length <= 2;
+  const textHasAtMost3Words =
+    text.split(" ").filter((s) => s !== "&").length <= 3; // Increased from 2 to 3 for custom sections
   const startsWithCapitalLetter = /[A-Z]/.test(text.slice(0, 1));
 
   if (
-    textHasAtMost2Words &&
+    textHasAtMost3Words &&
     hasOnlyLettersSpacesAmpersands(textItem) &&
     startsWithCapitalLetter &&
     SECTION_TITLE_KEYWORDS.some((keyword) =>
