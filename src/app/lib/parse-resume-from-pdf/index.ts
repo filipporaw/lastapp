@@ -15,10 +15,10 @@ const extractMetadataFromPDF = async (fileUrl: string) => {
     console.log('📄 PDF metadata found:', metadata);
     
     // Check if this is a cv---maker generated PDF
-    if (metadata.info?.producer === 'cv---maker' && metadata.info?.subject) {
+    if ((metadata.info as any)?.producer === 'cv---maker' && (metadata.info as any)?.subject) {
       console.log('🎯 Found cv---maker metadata, extracting JSON data from subject');
       try {
-        const jsonData = metadata.info.subject;
+        const jsonData = (metadata.info as any).subject;
         return JSON.parse(jsonData);
       } catch (error) {
         console.log('📄 Error parsing JSON from subject:', error);
