@@ -69,6 +69,14 @@ export const ResumePDFDefault = ({
   // Get the complete state data for JSON metadata
   const stateData = loadStateFromLocalStorage();
   const jsonMetadata = stateData ? JSON.stringify(stateData) : '';
+  
+  console.log('📄 PDF Generation - JSON metadata size:', jsonMetadata.length);
+  console.log('📄 PDF Generation - JSON metadata preview:', jsonMetadata.substring(0, 200) + '...');
+  
+  // Check if JSON is too large for PDF subject field (typical limit is ~64KB)
+  if (jsonMetadata.length > 50000) {
+    console.warn('⚠️ JSON metadata is very large (' + jsonMetadata.length + ' chars), might not fit in PDF subject field');
+  }
 
   return (
     <>

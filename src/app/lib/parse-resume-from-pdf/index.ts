@@ -13,12 +13,18 @@ const extractMetadataFromPDF = async (fileUrl: string) => {
     const metadata = await pdfFile.getMetadata();
     
     console.log('📄 PDF metadata found:', metadata);
+    console.log('📄 PDF metadata info:', (metadata.info as any));
+    console.log('📄 PDF producer:', (metadata.info as any)?.producer);
+    console.log('📄 PDF subject length:', (metadata.info as any)?.subject?.length || 0);
+    console.log('📄 PDF subject preview:', (metadata.info as any)?.subject?.substring(0, 200) || 'No subject');
     
     // Check if this is a cv---maker generated PDF
     if ((metadata.info as any)?.producer === 'cv---maker' && (metadata.info as any)?.subject) {
       console.log('🎯 Found cv---maker metadata, extracting JSON data from subject');
       try {
         const jsonData = (metadata.info as any).subject;
+        console.log('🎯 JSON data length:', jsonData.length);
+        console.log('🎯 JSON data preview:', jsonData.substring(0, 200) + '...');
         return JSON.parse(jsonData);
       } catch (error) {
         console.log('📄 Error parsing JSON from subject:', error);
